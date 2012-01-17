@@ -1,30 +1,31 @@
 ﻿namespace NewId
 {
-    using System;
-    using Util;
-
-
     public class NewIdGenerator
     {
         readonly byte[] _networkId;
 
         readonly object _sync = new object();
-        readonly ITickProvider _tickProvider;
+        readonly TickProvider _tickProvider;
+        int _a;
+        int _b;
+        int _c;
+        int _d;
         long _lastTick;
 
         ushort _sequence;
-        byte[] _timestamp;
 
 
-        public NewIdGenerator(byte[] networkId, ITickProvider tickProvider)
+        public NewIdGenerator(NetworkIdProvider networkIdProvider, TickProvider tickProvider)
         {
-            _networkId = networkId;
+            _networkId = networkIdProvider.NetworkId;
             _tickProvider = tickProvider;
+
+            _c = _networkId[0] << 24 | _networkId[1] << 16 | _networkId[2] << 8 | _networkId[3];
+            _d = _networkId[4] << 24 | _networkId[5] << 16;
         }
 
         public NewId Next()
         {
-            byte[] timestampBytes;
             ushort sequence;
 
             long ticks = _tickProvider.Ticks;
@@ -32,52 +33,27 @@
             {
                 if (ticks > _lastTick)
                 {
-                    _lastTick = ticks;
-                    _timestamp = GetTimestamp();
-                    _sequence = 0;
+                    UpdateTimestamp(ticks);
                 }
 
                 if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
                 {
-                    _lastTick++;
-                    _timestamp = GetTimestamp();
-                    _sequence = 0;
+                    UpdateTimestamp(_lastTick + 1);
                 }
 
-                timestampBytes = _timestamp;
                 sequence = _sequence++;
             }
 
-            var bytes = new byte[16];
-            byte[] sequenceBytes = BitConverter.GetBytes(sequence);
-
-            Buffer.BlockCopy(timestampBytes, 0, bytes, 0, 14);
-
-            bytes[14] = sequenceBytes[1];
-            bytes[15] = sequenceBytes[0];
-
-            var result = new NewId(bytes);
-
-            return result;
+            return new NewId(_a, _b, _c, _d | sequence);
         }
 
-        byte[] GetTimestamp()
+        void UpdateTimestamp(long tick)
         {
-            byte[] timestamp = BitConverter.GetBytes(_lastTick);
+            _lastTick = tick;
+            _sequence = 0;
 
-            var result = new byte[14];
-            result[0] = timestamp[7];
-            result[1] = timestamp[6];
-            result[2] = timestamp[5];
-            result[3] = timestamp[4];
-            result[4] = timestamp[3];
-            result[5] = timestamp[2];
-            result[6] = timestamp[1];
-            result[7] = timestamp[0];
-
-            Buffer.BlockCopy(_networkId, 0, result, 8, 6);
-
-            return result;
+            _a = (int) (tick >> 32);
+            _b = (int) (tick & 0xFFFFFFFF);
         }
     }
 }

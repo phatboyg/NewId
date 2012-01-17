@@ -1,14 +1,21 @@
-﻿namespace NewId.Util
+namespace NewId.Providers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.NetworkInformation;
-    using System.Security.Cryptography;
 
-    public class NetworkId
+    public class DefaultNetworkIdProvider :
+        NetworkIdProvider
     {
-        public byte[] GetPhysicalNetworkId()
+        byte[] _address;
+
+        public byte[] NetworkId
+        {
+            get { return _address ?? (_address = GetNetworkAddress()); }
+        }
+
+        static byte[] GetNetworkAddress()
         {
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
 
@@ -26,7 +33,6 @@
             }
 
             byte[] address = network.GetPhysicalAddress().GetAddressBytes();
-
             return address;
         }
     }

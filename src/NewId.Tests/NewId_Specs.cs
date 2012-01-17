@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics;
     using NUnit.Framework;
-    using Util;
 
     [TestFixture]
     public class Using_the_newid_generator
@@ -11,9 +10,7 @@
         [Test]
         public void Should_generate_unique_identifiers_with_each_invocation()
         {
-            var generator = new NewIdGenerator(new NetworkId().GetPhysicalNetworkId(), new DateTimeTickProvider());
-
-            generator.Next();
+            NewId.Next();
 
             var timer = Stopwatch.StartNew();
 
@@ -22,7 +19,7 @@
             NewId[] ids = new NewId[limit];
             for (int i = 0; i < limit; i++)
             {
-                ids[i] = generator.Next();
+                ids[i] = NewId.Next();
             }
 
             timer.Stop();
@@ -40,15 +37,14 @@
         [Test]
         public void Should_generate_sequential_ids_quickly()
         {
-            var generator = new NewIdGenerator(new NetworkId().GetPhysicalNetworkId(), new DateTimeTickProvider());
-            generator.Next();
+            NewId.Next();
 
             int limit = 10;
 
             NewId[] ids = new NewId[limit];
             for (int i = 0; i < limit; i++)
             {
-                ids[i] = generator.Next();
+                ids[i] = NewId.Next();
             }
 
             for (int i = 0; i < limit - 1; i++)

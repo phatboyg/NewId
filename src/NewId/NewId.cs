@@ -2,6 +2,7 @@ namespace NewId
 {
     using System;
     using System.Diagnostics.Contracts;
+    using Providers;
 
     /// <summary>
     /// A NewId is a type that fits into the same space as a Guid/Uuid/uniqueidentifier,
@@ -11,12 +12,18 @@ namespace NewId
     public struct NewId :
         IEquatable<NewId>,
         IComparable<NewId>,
+        IComparable,
         IFormattable
     {
-        const int ByteLength = 16;
         static NewId _empty;
-        static byte[] _emptyBytes = new byte[ByteLength] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        readonly byte[] _bytes;
+        static NewIdGenerator _generator;
+        static NetworkIdProvider _networkIdProvider;
+        static TickProvider _tickProvider;
+
+        readonly Int32 _a;
+        readonly Int32 _b;
+        readonly Int32 _c;
+        readonly Int32 _d;
 
         /// <summary>
         /// Creates a NewId using the specified byte array.
@@ -25,10 +32,13 @@ namespace NewId
         public NewId(byte[] bytes)
         {
             Contract.Requires(bytes != null, "bytes cannot be null");
-            Contract.Requires(bytes.Length == ByteLength, "Exactly 16 bytes expected");
+            Contract.Requires(bytes.Length == 16, "Exactly 16 bytes expected");
             Contract.EndContractBlock();
 
-            _bytes = bytes;
+            _a = BitConverter.ToInt32(bytes, 0);
+            _b = BitConverter.ToInt16(bytes, 4) << 16 | BitConverter.ToInt16(bytes, 6);
+            _c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
+            _d = bytes[12] << 24 | bytes[13] << 16 | bytes[14] << 8 | bytes[15];
         }
 
         public NewId(string value)
@@ -39,7 +49,20 @@ namespace NewId
 
             var guid = new Guid(value);
 
-            _bytes = guid.ToByteArray();
+            byte[] bytes = guid.ToByteArray();
+
+            _a = BitConverter.ToInt32(bytes, 0);
+            _b = BitConverter.ToInt16(bytes, 4) << 16 | BitConverter.ToInt16(bytes, 6);
+            _c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
+            _d = bytes[12] << 24 | bytes[13] << 16 | bytes[14] << 8 | bytes[15];
+        }
+
+        public NewId(int a, int b, int c, int d)
+        {
+            _a = a;
+            _b = b;
+            _c = c;
+            _d = d;
         }
 
         public static NewId Empty
@@ -47,25 +70,48 @@ namespace NewId
             get { return _empty; }
         }
 
+        static NewIdGenerator Generator
+        {
+            get { return _generator ?? (_generator = new NewIdGenerator(NetworkIdProvider, TickProvider)); }
+        }
+
+        static NetworkIdProvider NetworkIdProvider
+        {
+            get { return _networkIdProvider ?? (_networkIdProvider = new DefaultNetworkIdProvider()); }
+        }
+
+        static TickProvider TickProvider
+        {
+            get { return _tickProvider ?? (_tickProvider = new DateTimeTickProvider()); }
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            if (!(obj is NewId))
+                throw new ArgumentException("Argument must be a NewId");
+
+            return CompareTo((NewId)obj);
+        }
+
         public int CompareTo(NewId other)
         {
-            for (int i = 0; i < ByteLength; i++)
-            {
-                byte myByte = _bytes[i];
-                byte otherByte = other._bytes[i];
-
-                if (myByte == otherByte)
-                    continue;
-
-                return myByte > otherByte ? 1 : -1;
-            }
+            if (_a != other._a)
+                return ((uint) _a < (uint) other._a) ? -1 : 1;
+            if (_b != other._b)
+                return ((uint) _b < (uint) other._b) ? -1 : 1;
+            if (_c != other._c)
+                return ((uint) _c < (uint) other._c) ? -1 : 1;
+            if (_d != other._d)
+                return ((uint) _d < (uint) other._d) ? -1 : 1;
 
             return 0;
         }
 
         public bool Equals(NewId other)
         {
-            return Equals(other._bytes, _bytes);
+            return other._a == _a && other._b == _b && other._c == _c && other._d == _d;
         }
 
         public string ToString(string format, IFormatProvider formatProvider)
@@ -83,6 +129,7 @@ namespace NewId
             var result = new char[38];
             int offset = 0;
             int length = 38;
+            int alpha = char.IsUpper(formatCh) ? 0x41 : 0x61;
 
             bool dash = true;
 
@@ -110,43 +157,41 @@ namespace NewId
                 throw new FormatException("The format string was not valid");
             }
 
-            byte[] bytes = _bytes ?? _emptyBytes;
-
-            offset = HexToChars(result, offset, bytes[0]);
-            offset = HexToChars(result, offset, bytes[1]);
-            offset = HexToChars(result, offset, bytes[2]);
-            offset = HexToChars(result, offset, bytes[3]);
+            offset = TwoBytesToChars(result, offset, _a >> 24, _a >> 16, alpha);
+            offset = TwoBytesToChars(result, offset, _a >> 8, _a, alpha);
             if (dash)
                 result[offset++] = '-';
-            offset = HexToChars(result, offset, bytes[4]);
-            offset = HexToChars(result, offset, bytes[5]);
+            offset = TwoBytesToChars(result, offset, _b >> 24, _b >> 16, alpha);
             if (dash)
                 result[offset++] = '-';
-            offset = HexToChars(result, offset, bytes[6]);
-            offset = HexToChars(result, offset, bytes[7]);
+            offset = TwoBytesToChars(result, offset, _b >> 8, _b, alpha);
             if (dash)
                 result[offset++] = '-';
-            offset = HexToChars(result, offset, bytes[8]);
-            offset = HexToChars(result, offset, bytes[9]);
+            offset = TwoBytesToChars(result, offset, _c >> 24, _c >> 16, alpha);
             if (dash)
                 result[offset++] = '-';
-            offset = HexToChars(result, offset, bytes[10]);
-            offset = HexToChars(result, offset, bytes[11]);
-            offset = HexToChars(result, offset, bytes[12]);
-            offset = HexToChars(result, offset, bytes[13]);
-            offset = HexToChars(result, offset, bytes[14]);
-            HexToChars(result, offset, bytes[15]);
+            offset = TwoBytesToChars(result, offset, _c >> 8, _c, alpha);
+            offset = TwoBytesToChars(result, offset, _d >> 24, _d >> 16, alpha);
+            TwoBytesToChars(result, offset, _d >> 8, _d, alpha);
 
             return new string(result, 0, length);
         }
 
         public byte[] ToByteArray()
         {
-            var result = new byte[ByteLength];
+            byte[] a = BitConverter.GetBytes(_a);
+            byte[] b = BitConverter.GetBytes(_b);
+            byte[] c = BitConverter.GetBytes(_c);
+            byte[] d = BitConverter.GetBytes(_d);
 
-            Buffer.BlockCopy(_bytes ?? _emptyBytes, 0, result, 0, ByteLength);
+            var bytes = new byte[16];
 
-            return result;
+            Buffer.BlockCopy(a, 0, bytes, 0, 4);
+            Buffer.BlockCopy(b, 0, bytes, 4, 4);
+            Buffer.BlockCopy(c, 0, bytes, 8, 4);
+            Buffer.BlockCopy(d, 0, bytes, 12, 4);
+
+            return bytes;
         }
 
         public override string ToString()
@@ -168,21 +213,54 @@ namespace NewId
 
         public override int GetHashCode()
         {
-            return (_bytes != null ? _bytes.GetHashCode() : 0);
+            unchecked
+            {
+                int result = _a;
+                result = (result*397) ^ _b;
+                result = (result*397) ^ _c;
+                result = (result*397) ^ _d;
+                return result;
+            }
         }
 
-        static char HexToChar(int value)
+        static char HexToChar(int value, int alpha)
         {
             value = value & 0xf;
-            return (char) ((value > 9) ? value - 10 + 0x61 : value + 0x30);
+            return (char) ((value > 9) ? value - 10 + alpha : value + 0x30);
         }
 
-        static int HexToChars(char[] chars, int offset, int value)
+        static int TwoBytesToChars(char[] chars, int offset, int first, int second, int alpha)
         {
-            chars[offset++] = HexToChar(value >> 4);
-            chars[offset++] = HexToChar(value);
+            offset = ByteToChars(chars, offset, first, alpha);
+            return ByteToChars(chars, offset, second, alpha);
+        }
+
+        static int ByteToChars(char[] chars, int offset, int value, int alpha)
+        {
+            chars[offset++] = HexToChar(value >> 4, alpha);
+            chars[offset++] = HexToChar(value, alpha);
 
             return offset;
+        }
+
+        public static void SetGenerator(NewIdGenerator generator)
+        {
+            _generator = generator;
+        }
+
+        public static void SetNetworkIdProvider(NetworkIdProvider provider)
+        {
+            _networkIdProvider = provider;
+        }
+
+        public static void SetTickProvider(TickProvider provider)
+        {
+            _tickProvider = provider;
+        }
+
+        public static NewId Next()
+        {
+            return Generator.Next();
         }
     }
 }

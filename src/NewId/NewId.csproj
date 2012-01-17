@@ -35,12 +35,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetworkIdProvider.cs" />
+    <Compile Include="TickProvider.cs" />
     <Compile Include="NewId.cs" />
     <Compile Include="NewIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\DateTimeTickProvider.cs" />
-    <Compile Include="Util\NetworkId.cs" />
-    <Compile Include="Util\TickProvider.cs" />
+    <Compile Include="Providers\DateTimeTickProvider.cs" />
+    <Compile Include="Providers\DefaultNetworkIdProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

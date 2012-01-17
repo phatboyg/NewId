@@ -1,5 +1,6 @@
 ﻿namespace NewId.Tests
 {
+    using System;
     using NUnit.Framework;
 
     [TestFixture]
@@ -35,6 +36,19 @@
             NewId newId = new NewId();
 
             Assert.AreEqual("00000000000000000000000000000000", newId.ToString("N"));
+        }
+
+        [Test]
+        public void Should_work_from_guid_to_newid_to_guid()
+        {
+            Guid g = Guid.NewGuid();
+
+            NewId n = new NewId(g.ToByteArray());
+
+            var gs = g.ToString("d");
+            var ns = n.ToString("d");
+
+            Assert.AreEqual(gs, ns);
         }
     }
 }
