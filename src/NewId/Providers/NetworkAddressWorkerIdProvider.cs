@@ -6,7 +6,7 @@ namespace NewId.Providers
     using System.Net.NetworkInformation;
 
     public class NetworkAddressWorkerIdProvider :
-        WorkerIdProvider
+        IWorkerIdProvider
     {
         public byte[] GetWorkerId(int index)
         {

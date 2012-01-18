@@ -1,6 +1,6 @@
 namespace NewId
 {
-    public interface TickProvider
+    public interface ITickProvider
     {
         long Ticks { get; }
     }

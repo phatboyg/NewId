@@ -31,7 +31,7 @@
         }
 
         class TimeLapseTickProvider :
-            TickProvider
+            ITickProvider
         {
             DateTime _previous = DateTime.UtcNow;
             TimeSpan _interval = TimeSpan.FromSeconds(2);

@@ -2,21 +2,21 @@
 {
     public class NewIdGenerator
     {
+        readonly int _c;
+        readonly int _d;
         readonly byte[] _networkId;
 
         readonly object _sync = new object();
-        readonly TickProvider _tickProvider;
+        readonly ITickProvider _tickProvider;
         readonly int _workerIndex;
         int _a;
         int _b;
-        int _c;
-        int _d;
         long _lastTick;
 
         ushort _sequence;
 
 
-        public NewIdGenerator(TickProvider tickProvider, WorkerIdProvider workerIdProvider, int workerIndex)
+        public NewIdGenerator(ITickProvider tickProvider, IWorkerIdProvider workerIdProvider, int workerIndex = 0)
         {
             _workerIndex = workerIndex;
             _networkId = workerIdProvider.GetWorkerId(_workerIndex);
@@ -24,11 +24,6 @@
 
             _c = _networkId[0] << 24 | _networkId[1] << 16 | _networkId[2] << 8 | _networkId[3];
             _d = _networkId[4] << 24 | _networkId[5] << 16;
-        }
-
-        public NewIdGenerator(TickProvider tickProvider, WorkerIdProvider workerIdProvider)
-            : this(tickProvider, workerIdProvider, 0)
-        {
         }
 
         public NewId Next()

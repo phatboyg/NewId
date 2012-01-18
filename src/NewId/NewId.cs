@@ -19,8 +19,8 @@ namespace NewId
         public static readonly NewId Empty = new NewId(0, 0, 0, 0);
 
         static NewIdGenerator _generator;
-        static TickProvider _tickProvider;
-        static WorkerIdProvider _workerIdProvider;
+        static ITickProvider _tickProvider;
+        static IWorkerIdProvider _workerIdProvider;
 
         readonly Int32 _a;
         readonly Int32 _b;
@@ -66,12 +66,12 @@ namespace NewId
             get { return _generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider)); }
         }
 
-        static WorkerIdProvider WorkerIdProvider
+        static IWorkerIdProvider WorkerIdProvider
         {
             get { return _workerIdProvider ?? (_workerIdProvider = new NetworkAddressWorkerIdProvider()); }
         }
 
-        static TickProvider TickProvider
+        static ITickProvider TickProvider
         {
             get { return _tickProvider ?? (_tickProvider = new DateTimeTickProvider()); }
         }
@@ -281,12 +281,12 @@ namespace NewId
             _generator = generator;
         }
 
-        public static void SetWorkerIdProvider(WorkerIdProvider provider)
+        public static void SetWorkerIdProvider(IWorkerIdProvider provider)
         {
             _workerIdProvider = provider;
         }
 
-        public static void SetTickProvider(TickProvider provider)
+        public static void SetTickProvider(ITickProvider provider)
         {
             _tickProvider = provider;
         }

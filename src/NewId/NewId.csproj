@@ -36,8 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NewIdExtensions.cs" />
-    <Compile Include="WorkerIdProvider.cs" />
-    <Compile Include="TickProvider.cs" />
+    <Compile Include="IWorkerIdProvider.cs" />
+    <Compile Include="ITickProvider.cs" />
     <Compile Include="NewId.cs" />
     <Compile Include="NewIdGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,7 +3,7 @@
     using System;
 
     public class DateTimeTickProvider :
-        TickProvider
+        ITickProvider
     {
         public long Ticks
         {

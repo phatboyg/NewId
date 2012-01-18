@@ -1,6 +1,6 @@
 namespace NewId
 {
-    public interface WorkerIdProvider
+    public interface IWorkerIdProvider
     {
         byte[] GetWorkerId(int index);
     }
