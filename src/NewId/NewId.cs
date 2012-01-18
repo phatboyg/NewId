@@ -73,7 +73,7 @@ namespace NewId
 
         static ITickProvider TickProvider
         {
-            get { return _tickProvider ?? (_tickProvider = new DateTimeTickProvider()); }
+            get { return _tickProvider ?? (_tickProvider = new StopwatchTickProvider()); }
         }
 
         public int CompareTo(object obj)
