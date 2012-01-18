@@ -27,11 +27,10 @@
             for (int i = 0; i < limit - 1; i++)
             {
                 Assert.AreNotEqual(ids[i], ids[i + 1]);
-                if(i%1024 == 0)
-                    Console.WriteLine(ids[i]);
             }
 
-            Console.WriteLine("Generated {0} ids in {1}ms", limit, timer.ElapsedMilliseconds);
+            Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
+                              limit/timer.ElapsedMilliseconds);
         }
 
         [Test]
