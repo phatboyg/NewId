@@ -35,10 +35,7 @@ namespace NewId
             Contract.Requires(bytes.Length == 16, "Exactly 16 bytes expected");
             Contract.EndContractBlock();
 
-            _a = BitConverter.ToInt32(bytes, 0);
-            _b = BitConverter.ToInt16(bytes, 4) << 16 | BitConverter.ToInt16(bytes, 6);
-            _c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
-            _d = bytes[12] << 24 | bytes[13] << 16 | bytes[14] << 8 | bytes[15];
+            ConvertBytes(bytes, out _a, out _b, out _c, out _d);
         }
 
         public NewId(string value)
@@ -51,10 +48,7 @@ namespace NewId
 
             byte[] bytes = guid.ToByteArray();
 
-            _a = BitConverter.ToInt32(bytes, 0);
-            _b = BitConverter.ToInt16(bytes, 4) << 16 | BitConverter.ToInt16(bytes, 6);
-            _c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
-            _d = bytes[12] << 24 | bytes[13] << 16 | bytes[14] << 8 | bytes[15];
+            ConvertBytes(bytes, out _a, out _b, out _c, out _d);
         }
 
         public NewId(int a, int b, int c, int d)
@@ -129,7 +123,7 @@ namespace NewId
             var result = new char[38];
             int offset = 0;
             int length = 38;
-            int alpha = char.IsUpper(formatCh) ? 0x41 : 0x61;
+            const int alpha = 0x61;
 
             bool dash = true;
 
@@ -179,17 +173,24 @@ namespace NewId
 
         public byte[] ToByteArray()
         {
-            byte[] a = BitConverter.GetBytes(_a);
-            byte[] b = BitConverter.GetBytes(_b);
-            byte[] c = BitConverter.GetBytes(_c);
-            byte[] d = BitConverter.GetBytes(_d);
+            byte[] bytes = new byte[16];
 
-            var bytes = new byte[16];
-
-            Buffer.BlockCopy(a, 0, bytes, 0, 4);
-            Buffer.BlockCopy(b, 0, bytes, 4, 4);
-            Buffer.BlockCopy(c, 0, bytes, 8, 4);
-            Buffer.BlockCopy(d, 0, bytes, 12, 4);
+            bytes[0] = (byte)(_a);
+            bytes[1] = (byte)(_a >> 8);
+            bytes[2] = (byte)(_a >> 16);
+            bytes[3] = (byte)(_a >> 24);
+            bytes[4] = (byte)(_b >> 16);
+            bytes[5] = (byte)(_b >> 24);
+            bytes[6] = (byte)(_b);
+            bytes[7] = (byte)(_b >> 8);
+            bytes[8] = (byte)(_c >> 24);
+            bytes[9] = (byte)(_c >> 16);
+            bytes[10] = (byte)(_c >> 8);
+            bytes[11] = (byte)(_c);
+            bytes[12] = (byte)(_d >> 24);
+            bytes[13] = (byte)(_d >> 16);
+            bytes[14] = (byte)(_d >> 8);
+            bytes[15] = (byte)(_d);
 
             return bytes;
         }
@@ -221,6 +222,14 @@ namespace NewId
                 result = (result*397) ^ _d;
                 return result;
             }
+        }
+
+        static void ConvertBytes(byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
+        {
+            a = bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
+            b = bytes[5] << 24 | bytes[4] << 16 | bytes[7] << 8 | bytes[6];
+            c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
+            d = bytes[12] << 24 | bytes[13] << 16 | bytes[14] << 8 | bytes[15];
         }
 
         static char HexToChar(int value, int alpha)

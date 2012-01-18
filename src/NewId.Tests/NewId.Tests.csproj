@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GuidInterop_Specs.cs" />
     <Compile Include="LongTerm_Specs.cs" />
     <Compile Include="NetworkAddress_Specs.cs" />
     <Compile Include="NewId_Specs.cs" />
