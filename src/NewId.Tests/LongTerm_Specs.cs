@@ -10,7 +10,7 @@
         [Test]
         public void Should_keep_them_ordered_for_sql_server()
         {
-            var generator = new NewIdGenerator(new DefaultNetworkIdProvider(), new TimeLapseTickProvider());
+            var generator = new NewIdGenerator(new TimeLapseTickProvider(), new NetworkAddressWorkerIdProvider());
             generator.Next();
 
             int limit = 1024;

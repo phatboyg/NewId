@@ -9,9 +9,9 @@
         [Test]
         public void Should_pull_the_network_adapter_mac_address()
         {
-            var networkIdProvider = new DefaultNetworkIdProvider();
+            var networkIdProvider = new NetworkAddressWorkerIdProvider();
 
-            byte[] networkId = networkIdProvider.NetworkId;
+            byte[] networkId = networkIdProvider.GetWorkerId(0);
 
             Assert.IsNotNull(networkId);
             Assert.AreEqual(6, networkId.Length);

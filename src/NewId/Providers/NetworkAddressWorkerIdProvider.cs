@@ -5,17 +5,15 @@ namespace NewId.Providers
     using System.Linq;
     using System.Net.NetworkInformation;
 
-    public class DefaultNetworkIdProvider :
-        NetworkIdProvider
+    public class NetworkAddressWorkerIdProvider :
+        WorkerIdProvider
     {
-        byte[] _address;
-
-        public byte[] NetworkId
+        public byte[] GetWorkerId(int index)
         {
-            get { return _address ?? (_address = GetNetworkAddress()); }
+            return GetNetworkAddress(index);
         }
 
-        static byte[] GetNetworkAddress()
+        static byte[] GetNetworkAddress(int index)
         {
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
 
@@ -26,7 +24,10 @@ namespace NewId.Providers
             IEnumerable<NetworkInterface> wireless =
                 interfaces.Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211);
 
-            NetworkInterface network = ethernet.Concat(gigabit).Concat(wireless).FirstOrDefault();
+            NetworkInterface network = ethernet.Concat(gigabit).Concat(wireless)
+                .Skip(index)
+                .FirstOrDefault();
+
             if (network == null)
             {
                 throw new InvalidOperationException("Unable to find usable network adapter for unique address");
