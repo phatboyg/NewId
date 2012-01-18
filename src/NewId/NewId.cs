@@ -15,10 +15,12 @@ namespace NewId
         IComparable,
         IFormattable
     {
-        static NewId _empty;
+        const int LowercaseA = 0x61;
+        public static readonly NewId Empty = new NewId(0, 0, 0, 0);
+
         static NewIdGenerator _generator;
-        static WorkerIdProvider _workerIdProvider;
         static TickProvider _tickProvider;
+        static WorkerIdProvider _workerIdProvider;
 
         readonly Int32 _a;
         readonly Int32 _b;
@@ -59,11 +61,6 @@ namespace NewId
             _d = d;
         }
 
-        public static NewId Empty
-        {
-            get { return _empty; }
-        }
-
         static NewIdGenerator Generator
         {
             get { return _generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider)); }
@@ -86,7 +83,7 @@ namespace NewId
             if (!(obj is NewId))
                 throw new ArgumentException("Argument must be a NewId");
 
-            return CompareTo((NewId)obj);
+            return CompareTo((NewId) obj);
         }
 
         public int CompareTo(NewId other)
@@ -123,7 +120,7 @@ namespace NewId
             var result = new char[38];
             int offset = 0;
             int length = 38;
-            const int alpha = 0x61;
+
 
             bool dash = true;
 
@@ -151,46 +148,73 @@ namespace NewId
                 throw new FormatException("The format string was not valid");
             }
 
-            offset = TwoBytesToChars(result, offset, _a >> 24, _a >> 16, alpha);
-            offset = TwoBytesToChars(result, offset, _a >> 8, _a, alpha);
+            offset = TwoBytesToChars(result, offset, _a >> 24, _a >> 16, LowercaseA);
+            offset = TwoBytesToChars(result, offset, _a >> 8, _a, LowercaseA);
             if (dash)
                 result[offset++] = '-';
-            offset = TwoBytesToChars(result, offset, _b >> 24, _b >> 16, alpha);
+            offset = TwoBytesToChars(result, offset, _b >> 24, _b >> 16, LowercaseA);
             if (dash)
                 result[offset++] = '-';
-            offset = TwoBytesToChars(result, offset, _b >> 8, _b, alpha);
+            offset = TwoBytesToChars(result, offset, _b >> 8, _b, LowercaseA);
             if (dash)
                 result[offset++] = '-';
-            offset = TwoBytesToChars(result, offset, _c >> 24, _c >> 16, alpha);
+            offset = TwoBytesToChars(result, offset, _c >> 24, _c >> 16, LowercaseA);
             if (dash)
                 result[offset++] = '-';
-            offset = TwoBytesToChars(result, offset, _c >> 8, _c, alpha);
-            offset = TwoBytesToChars(result, offset, _d >> 24, _d >> 16, alpha);
-            TwoBytesToChars(result, offset, _d >> 8, _d, alpha);
+            offset = TwoBytesToChars(result, offset, _c >> 8, _c, LowercaseA);
+            offset = TwoBytesToChars(result, offset, _d >> 24, _d >> 16, LowercaseA);
+            TwoBytesToChars(result, offset, _d >> 8, _d, LowercaseA);
 
             return new string(result, 0, length);
         }
 
+        public static bool operator ==(NewId left, NewId right)
+        {
+            return left._a == right._a && left._b == right._b && left._c == right._c && left._d == right._d;
+        }
+
+        public static bool operator !=(NewId left, NewId right)
+        {
+            return !(left == right);
+        }
+
+        public Guid ToGuid()
+        {
+            int a = _a;
+            var b = (short) (_b >> 16);
+            var c = (short) _b;
+            var d = (byte) (_c >> 24);
+            var e = (byte) (_c >> 16);
+            var f = (byte) (_c >> 8);
+            var g = (byte) (_c);
+            var h = (byte) (_d >> 24);
+            var i = (byte) (_d >> 16);
+            var j = (byte) (_d >> 8);
+            var k = (byte) (_d);
+
+            return new Guid(a, b, c, d, e, f, g, h, i, j, k);
+        }
+
         public byte[] ToByteArray()
         {
-            byte[] bytes = new byte[16];
+            var bytes = new byte[16];
 
-            bytes[0] = (byte)(_a);
-            bytes[1] = (byte)(_a >> 8);
-            bytes[2] = (byte)(_a >> 16);
-            bytes[3] = (byte)(_a >> 24);
-            bytes[4] = (byte)(_b >> 16);
-            bytes[5] = (byte)(_b >> 24);
-            bytes[6] = (byte)(_b);
-            bytes[7] = (byte)(_b >> 8);
-            bytes[8] = (byte)(_c >> 24);
-            bytes[9] = (byte)(_c >> 16);
-            bytes[10] = (byte)(_c >> 8);
-            bytes[11] = (byte)(_c);
-            bytes[12] = (byte)(_d >> 24);
-            bytes[13] = (byte)(_d >> 16);
-            bytes[14] = (byte)(_d >> 8);
-            bytes[15] = (byte)(_d);
+            bytes[0] = (byte) (_a);
+            bytes[1] = (byte) (_a >> 8);
+            bytes[2] = (byte) (_a >> 16);
+            bytes[3] = (byte) (_a >> 24);
+            bytes[4] = (byte) (_b >> 16);
+            bytes[5] = (byte) (_b >> 24);
+            bytes[6] = (byte) (_b);
+            bytes[7] = (byte) (_b >> 8);
+            bytes[8] = (byte) (_c >> 24);
+            bytes[9] = (byte) (_c >> 16);
+            bytes[10] = (byte) (_c >> 8);
+            bytes[11] = (byte) (_c);
+            bytes[12] = (byte) (_d >> 24);
+            bytes[13] = (byte) (_d >> 16);
+            bytes[14] = (byte) (_d >> 8);
+            bytes[15] = (byte) (_d);
 
             return bytes;
         }

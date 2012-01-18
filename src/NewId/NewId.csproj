@@ -35,6 +35,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewIdExtensions.cs" />
     <Compile Include="WorkerIdProvider.cs" />
     <Compile Include="TickProvider.cs" />
     <Compile Include="NewId.cs" />

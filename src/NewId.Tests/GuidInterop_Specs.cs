@@ -101,5 +101,31 @@
 
             Assert.AreEqual(n, nn);
         }
+
+        [Test]
+        public void Should_convert_to_guid_quickly()
+        {
+            NewId n = NewId.Next();
+
+            Guid g = n.ToGuid();
+
+            var ns = n.ToString();
+            var gs = g.ToString();
+
+            Assert.AreEqual(ns, gs);
+        }
+
+        [Test]
+        public void Should_convert_from_a_guid_quickly()
+        {
+            Guid g = Guid.NewGuid();
+
+            NewId n = g.ToNewId();
+
+            var ns = n.ToString();
+            var gs = g.ToString();
+
+            Assert.AreEqual(ns, gs);
+        }
     }
 }
