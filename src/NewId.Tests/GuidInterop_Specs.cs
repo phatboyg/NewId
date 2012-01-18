@@ -87,5 +87,19 @@
 
             Assert.AreEqual(n, ng);
         }
+
+        [Test]
+        public void Should_properly_handle_string_passthrough()
+        {
+            NewId n = NewId.Next();
+
+            var ns = n.ToString("D");
+
+            var g = new Guid(ns);
+
+            var nn = new NewId(g.ToString("D"));
+
+            Assert.AreEqual(n, nn);
+        }
     }
 }
