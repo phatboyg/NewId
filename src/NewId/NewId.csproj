@@ -35,6 +35,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formatters\DashedHexFormatter.cs" />
+    <Compile Include="Formatters\HexFormatter.cs" />
+    <Compile Include="INewIdFormatter.cs" />
     <Compile Include="NewIdExtensions.cs" />
     <Compile Include="IWorkerIdProvider.cs" />
     <Compile Include="ITickProvider.cs" />
@@ -45,6 +48,7 @@
     <Compile Include="Providers\NetworkAddressWorkerIdProvider.cs" />
     <Compile Include="Providers\StopwatchTickProvider.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
