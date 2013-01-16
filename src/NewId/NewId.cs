@@ -142,7 +142,7 @@ namespace NewId
                 throw new FormatException("The format string must be exactly one character or null");
 
             char formatCh = format[0];
-            int[] bytes = sequential ? GetSequentialFormatteryArray() : GetFormatteryArray();
+            byte[] bytes = sequential ? GetSequentialFormatteryArray() : GetFormatteryArray();
 
             if (formatCh == 'B' || formatCh == 'b')
                 return _braceFormatter.Format(bytes);
@@ -158,53 +158,53 @@ namespace NewId
 
         public string ToString(INewIdFormatter formatter, bool sequential = false)
         {
-            int[] bytes = sequential ? GetSequentialFormatteryArray() : GetFormatteryArray();
+            byte[] bytes = sequential ? GetSequentialFormatteryArray() : GetFormatteryArray();
 
             return formatter.Format(bytes);
         }
 
-        int[] GetFormatteryArray()
+        byte[] GetFormatteryArray()
         {
-            var bytes = new int[16];
-            bytes[0] = _d >> 24;
-            bytes[1] = _d >> 16;
-            bytes[2] = _d >> 8;
-            bytes[3] = _d;
-            bytes[4] = _c >> 8;
-            bytes[5] = _c;
-            bytes[6] = _c >> 24;
-            bytes[7] = _c >> 16;
-            bytes[8] = _b >> 8;
-            bytes[9] = _b;
-            bytes[10] = _a >> 24;
-            bytes[11] = _a >> 16;
-            bytes[12] = _a >> 8;
-            bytes[13] = _a;
-            bytes[14] = _b >> 24;
-            bytes[15] = _b >> 16;
+            byte[] bytes = new byte[16];
+            bytes[0] = (byte)(_d >> 24);
+            bytes[1] = (byte)(_d >> 16);
+            bytes[2] = (byte)(_d >> 8);
+            bytes[3] = (byte)_d;
+            bytes[4] = (byte)(_c >> 8);
+            bytes[5] = (byte)_c;
+            bytes[6] = (byte)(_c >> 24);
+            bytes[7] = (byte)(_c >> 16);
+            bytes[8] = (byte)(_b >> 8);
+            bytes[9] = (byte)_b;
+            bytes[10] = (byte)(_a >> 24);
+            bytes[11] = (byte)(_a >> 16);
+            bytes[12] = (byte)(_a >> 8);
+            bytes[13] = (byte)_a;
+            bytes[14] = (byte)(_b >> 24);
+            bytes[15] = (byte)(_b >> 16);
 
             return bytes;
         }
 
-        int[] GetSequentialFormatteryArray()
+        byte[] GetSequentialFormatteryArray()
         {
-            var bytes = new int[16];
-            bytes[0] = _a >> 24;
-            bytes[1] = _a >> 16;
-            bytes[2] = _a >> 8;
-            bytes[3] = _a;
-            bytes[4] = _b >> 24;
-            bytes[5] = _b >> 16;
-            bytes[6] = _b >> 8;
-            bytes[7] = _b;
-            bytes[8] = _c >> 24;
-            bytes[9] = _c >> 16;
-            bytes[10] = _c >> 8;
-            bytes[11] = _c;
-            bytes[12] = _d >> 24;
-            bytes[13] = _d >> 16;
-            bytes[14] = _d >> 8;
-            bytes[15] = _d;
+            var bytes = new byte[16];
+            bytes[0] = (byte)(_a >> 24);
+            bytes[1] = (byte)(_a >> 16);
+            bytes[2] = (byte)(_a >> 8);
+            bytes[3] = (byte)_a;
+            bytes[4] = (byte)(_b >> 24);
+            bytes[5] = (byte)(_b >> 16);
+            bytes[6] = (byte)(_b >> 8);
+            bytes[7] = (byte)_b;
+            bytes[8] = (byte)(_c >> 24);
+            bytes[9] = (byte)(_c >> 16);
+            bytes[10] = (byte)(_c >> 8);
+            bytes[11] = (byte)_c;
+            bytes[12] = (byte)(_d >> 24);
+            bytes[13] = (byte)(_d >> 16);
+            bytes[14] = (byte)(_d >> 8);
+            bytes[15] = (byte)_d;
 
             return bytes;
         }

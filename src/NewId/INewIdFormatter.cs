@@ -2,6 +2,6 @@
 {
     public interface INewIdFormatter
     {
-        string Format(int[] bytes);
+        string Format(byte[] bytes);
     }
 }

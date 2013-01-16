@@ -35,8 +35,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formatters\Base32Formatter.cs" />
     <Compile Include="Formatters\DashedHexFormatter.cs" />
     <Compile Include="Formatters\HexFormatter.cs" />
+    <Compile Include="Formatters\ZBase32Formatter.cs" />
     <Compile Include="INewIdFormatter.cs" />
     <Compile Include="NewIdExtensions.cs" />
     <Compile Include="IWorkerIdProvider.cs" />
