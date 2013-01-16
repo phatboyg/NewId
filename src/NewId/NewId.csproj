@@ -40,11 +40,13 @@
     <Compile Include="Formatters\HexFormatter.cs" />
     <Compile Include="Formatters\ZBase32Formatter.cs" />
     <Compile Include="INewIdFormatter.cs" />
+    <Compile Include="INewIdParser.cs" />
     <Compile Include="NewIdExtensions.cs" />
     <Compile Include="IWorkerIdProvider.cs" />
     <Compile Include="ITickProvider.cs" />
     <Compile Include="NewId.cs" />
     <Compile Include="NewIdGenerator.cs" />
+    <Compile Include="Parsers\ZBase32Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\DateTimeTickProvider.cs" />
     <Compile Include="Providers\NetworkAddressWorkerIdProvider.cs" />
