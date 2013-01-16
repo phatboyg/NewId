@@ -3,7 +3,7 @@ COPYRIGHT = "Copyright 2012 Chris Patterson, All rights reserved."
 include FileTest
 require 'albacore'
 
-BUILD_NUMBER_BASE = '0.1.0'
+BUILD_NUMBER_BASE = '1.0.0'
 PRODUCT = 'NewId'
 CLR_TOOLS_VERSION = 'v4.0.30319'
 OUTPUT_PATH = 'bin/Release'
@@ -36,7 +36,7 @@ assemblyinfo :global_version do |asm|
 
   # Assembly file config
   asm.product_name = PRODUCT
-  asm.description = "NewId is an ordered 128-bit unique identifier generator."
+  asm.description = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
   asm.version = asm_version
   asm.file_version = build_number
   asm.custom_attributes :AssemblyInformationalVersion => "#{asm_version}",
@@ -83,9 +83,9 @@ end
 desc "Runs unit tests"
 nunit :tests => [:compile] do |nunit|
 
-          nunit.command = File.join('src', 'packages','NUnit.2.5.10.11092', 'tools', 'nunit-console.exe')
+          nunit.command = File.join(props[:src], 'packages','NUnit.Runners.2.6.2', 'tools', 'nunit-console.exe')
           nunit.options = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
-          nunit.assemblies = FileList["tests/NewId.Tests.dll"]
+          nunit.assemblies = FileList[File.join(props[:src], "NewId.Tests/bin/Release", "NewId.Tests.dll")]
 end
 
 task :package => [:nuget]

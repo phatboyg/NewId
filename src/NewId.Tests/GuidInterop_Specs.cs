@@ -127,5 +127,22 @@
 
             Assert.AreEqual(ns, gs);
         }
+
+        [Test]
+        public void Should_support_the_same_constructor()
+        {
+            var guid = new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+            var newid = new NewId(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+
+            Assert.AreEqual(guid.ToString(), newid.ToString());
+        }
+
+        [Test]
+        public void Should_display_sequentially_for_newid()
+        {
+            var id = NewId.Next();
+
+            Console.WriteLine(id.ToString("DS"));
+        }
     }
 }

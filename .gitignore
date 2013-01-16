@@ -1,21 +1,17 @@
 build_output/*
 build_artifacts/*
+doc/build/*
+
 *.suo
 *.user
+packages
+*.dotCover
+*.dotSettings
 
-NDependOut/*
-
-src/logs/*
-
-**/*.sln*
 bin
 obj
 _ReSharper*
-src/Samples/HeavyLoad/logs
 
-*.csproj.user
-*.resharper.user
-*.resharper
 *.ReSharper
 *.cache
 *~
@@ -23,15 +19,6 @@ src/Samples/HeavyLoad/logs
 *.bak
 *.orig
 
-TestResult.xml
-submit.xml
-tests/*
-SolutionVersion.cs
-src/SolutionVersion.cs
-tests
-doc/build/*
-
 # osx noise
 .DS_Store
-
-nuspecs/
+Gemfile.lock

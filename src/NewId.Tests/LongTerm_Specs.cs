@@ -1,6 +1,7 @@
 ﻿namespace NewId.Tests
 {
     using System;
+    using System.Data.SqlTypes;
     using NUnit.Framework;
     using Providers;
 
@@ -24,9 +25,12 @@
             for (int i = 0; i < limit - 1; i++)
             {
                 Assert.AreNotEqual(ids[i], ids[i + 1]);
-                Assert.Less(ids[i], ids[i + 1]);
-                if (i%16 == 0)
-                    Console.WriteLine(ids[i]);
+
+                SqlGuid left = ids[i].ToGuid();
+                SqlGuid right = ids[i + 1].ToGuid();
+                Assert.Less(left, right);
+                if (i % 128 == 0)
+                    Console.WriteLine("Normal: {0} Sql: {1}", left, ids[i].ToSequentialGuid());
             }
         }
 

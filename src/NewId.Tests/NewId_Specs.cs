@@ -29,7 +29,24 @@
             }
         }
 
-        [Test]
+        [Test, Explicit]
+        public void Should_be_able_to_extract_timestamp()
+        {
+            DateTime now = DateTime.UtcNow;
+            NewId id = NewId.Next();
+
+            DateTime timestamp = id.Timestamp;
+
+            Console.WriteLine("Now: {0}, Timestamp: {1}", now, timestamp);
+
+            var difference = (timestamp - now);
+            if (difference < TimeSpan.Zero)
+                difference = difference.Negate();
+
+            Assert.LessOrEqual(difference, TimeSpan.FromMinutes(1));
+        }
+
+        [Test, Explicit]
         public void Should_generate_unique_identifiers_with_each_invocation()
         {
             NewId.Next();
@@ -57,7 +74,7 @@
             }
 
             Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
-                              limit/timer.ElapsedMilliseconds);
+                limit/timer.ElapsedMilliseconds);
         }
     }
 }
