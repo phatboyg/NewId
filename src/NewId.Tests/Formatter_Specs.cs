@@ -93,6 +93,22 @@
         }
 
         [Test]
+        public void Should_convert_back_using_standard_parser()
+        {
+            var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
+
+            var formatter = new Base32Formatter(true);
+
+            string ns = n.ToString(formatter);
+
+            var parser = new Base32Parser();
+            var newId = parser.Parse(ns);
+
+
+            Assert.AreEqual(n, newId);
+        }
+
+        [Test]
         public void Should_convert_back_using_parser()
         {
             var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");

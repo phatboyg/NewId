@@ -46,6 +46,7 @@
     <Compile Include="ITickProvider.cs" />
     <Compile Include="NewId.cs" />
     <Compile Include="NewIdGenerator.cs" />
+    <Compile Include="Parsers\Base32Parser.cs" />
     <Compile Include="Parsers\ZBase32Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\DateTimeTickProvider.cs" />
