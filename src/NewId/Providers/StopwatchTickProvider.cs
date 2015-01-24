@@ -3,6 +3,7 @@ namespace NewId.Providers
     using System;
     using System.Diagnostics;
 
+
     public class StopwatchTickProvider :
         ITickProvider
     {

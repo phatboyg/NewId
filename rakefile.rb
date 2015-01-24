@@ -1,15 +1,12 @@
-COPYRIGHT = "Copyright 2012 Chris Patterson, All rights reserved."
+COPYRIGHT = "Copyright 2015 Chris Patterson, All rights reserved."
 
 include FileTest
 require 'albacore'
+require 'semver'
 
-BUILD_NUMBER_BASE = '1.0.0'
 PRODUCT = 'NewId'
 CLR_TOOLS_VERSION = 'v4.0.30319'
 OUTPUT_PATH = 'bin/Release'
-
-REVISION = 0
-asm_version = BUILD_NUMBER_BASE + "." + REVISION.to_s
 
 props = {
   :src => File.expand_path("src"),
@@ -19,32 +16,22 @@ props = {
   :lib => File.expand_path("lib")
 }
 
-desc "Cleans, compiles, il-merges, unit tests, prepares examples, packages zip"
-task :all => [:default, :package]
-
 desc "**Default**, compiles and runs tests"
-task :default => [:clean, :compile, :tests, :nuget]
+task :default => [:clean, :nuget_restore, :compile, :tests, :nuget, :package]
 
 desc "Update the common version information for the build. You can call this task without building."
 assemblyinfo :global_version do |asm|
-  commit_data = get_commit_hash_and_date
-  commit = commit_data[0]
-  commit_date = commit_data[1]
-  build_number = "#{BUILD_NUMBER_BASE}.#{Date.today.strftime('%y%j')}"
-  tc_build_number = ENV["BUILD_NUMBER"]
-  build_number = "#{BUILD_NUMBER_BASE}.#{tc_build_number}" unless tc_build_number.nil?
-
   # Assembly file config
   asm.product_name = PRODUCT
   asm.description = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-  asm.version = asm_version
-  asm.file_version = build_number
-  asm.custom_attributes :AssemblyInformationalVersion => "#{asm_version}",
-	:ComVisibleAttribute => false,
-	:CLSCompliantAttribute => true
+  asm.version = FORMAL_VERSION
+  asm.file_version = FORMAL_VERSION
+  asm.custom_attributes :AssemblyInformationalVersion => "#{BUILD_VERSION}",
+    :ComVisibleAttribute => false,
+    :CLSCompliantAttribute => true
   asm.copyright = COPYRIGHT
   asm.output_file = 'src/SolutionVersion.cs'
-  asm.namespaces "System", "System.Reflection", "System.Runtime.InteropServices", "System.Security"
+  asm.namespaces "System", "System.Reflection", "System.Runtime.InteropServices"
 end
 
 desc "Prepares the working directory for a new build"
@@ -60,8 +47,8 @@ task :clean do
 end
 
 desc "Cleans, versions, compiles the application and generates build_output/."
-task :compile => [:global_version, :build] do
-	copyOutputFiles File.join(props[:src], "NewId/bin/Release"), "NewId.{dll,pdb,xml}", File.join(props[:output], 'net-4.0')
+task :compile => [:versioning, :global_version, :build] do
+	copyOutputFiles File.join(props[:src], "NewId/bin/Release"), "NewId.{dll,pdb,xml}", File.join(props[:output], 'net-4.5')
 end
 
 desc "Only compiles the application."
@@ -82,74 +69,100 @@ end
 
 desc "Runs unit tests"
 nunit :tests => [:compile] do |nunit|
-
-          nunit.command = File.join(props[:src], 'packages','NUnit.Runners.2.6.2', 'tools', 'nunit-console.exe')
-          nunit.options = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
-          nunit.assemblies = FileList[File.join(props[:src], "NewId.Tests/bin/Release", "NewId.Tests.dll")]
+  nunit.command = File.join(props[:src], 'packages','NUnit.Runners.2.6.4', 'tools', 'nunit-console.exe')
+  nunit.options = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
+  nunit.assemblies = FileList[File.join(props[:src], "NewId.Tests/bin/Release", "NewId.Tests.dll")]
 end
 
 task :package => [:nuget]
 
 desc "ZIPs up the build results."
 zip :zip_output do |zip|
-	zip.directories_to_zip = [props[:stage]]
-	zip.output_file = "NewId-#{BUILD_NUMBER_BASE}.zip"
-	zip.output_path = [props[:artifacts]]
+  zip.directories_to_zip = [props[:stage]]
+  zip.output_file = "NewId-#{NUGET_VERSION}.zip"
+  zip.output_path = [props[:artifacts]]
 end
 
 desc "Builds the nuget package"
 task :nuget => ['create_nuspec'] do
-	sh "lib/nuget pack #{props[:artifacts]}/NewId.nuspec /OutputDirectory #{props[:artifacts]}"
+  sh "#{File.join(props[:src],'.nuget','nuget.exe')} pack #{props[:artifacts]}/NewId.nuspec /Symbols /OutputDirectory #{props[:artifacts]}"
+end
+
+desc "restores missing packages"
+msbuild :nuget_restore do |msb|
+  msb.use :net4
+  msb.targets :RestorePackages
+  msb.solution = File.join(props[:src], "NewId.Tests", "NewId.Tests.csproj")
 end
 
 nuspec :create_nuspec do |nuspec|
   nuspec.id = 'NewId'
-  nuspec.version = asm_version
+  nuspec.version = NUGET_VERSION
   nuspec.authors = 'Chris Patterson'
   nuspec.description = 'NewId is an ordered 128-bit unique identifier generator.'
   nuspec.title = 'NewId'
   nuspec.projectUrl = 'http://github.com/PhatBoyG/NewId'
   nuspec.language = "en-US"
   nuspec.licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0"
-  nuspec.requireLicenseAcceptance = "true"
+  nuspec.requireLicenseAcceptance = "false"
   nuspec.output_file = File.join(props[:artifacts], 'NewId.nuspec')
   add_files props[:output], 'NewId.{dll,pdb,xml}', nuspec
+  nuspec.file(File.join(props[:src], "NewId\\**\\*.cs").gsub("/","\\"), "src")
 end
 
 def project_outputs(props)
-	props[:projects].map{ |p| "src/#{p}/bin/#{BUILD_CONFIG}/#{p}.dll" }.
-		concat( props[:projects].map{ |p| "src/#{p}/bin/#{BUILD_CONFIG}/#{p}.exe" } ).
-		find_all{ |path| exists?(path) }
-end
-
-def get_commit_hash_and_date
-	begin
-		commit = `git log -1 --pretty=format:%H`
-		git_date = `git log -1 --date=iso --pretty=format:%ad`
-		commit_date = DateTime.parse( git_date ).strftime("%Y-%m-%d %H%M%S")
-	rescue
-		commit = "git unavailable"
-	end
-
-	[commit, commit_date]
+  props[:projects].map{ |p| "src/#{p}/bin/#{BUILD_CONFIG}/#{p}.dll" }.
+    concat( props[:projects].map{ |p| "src/#{p}/bin/#{BUILD_CONFIG}/#{p}.exe" } ).
+    find_all{ |path| exists?(path) }
 end
 
 def add_files stage, what_dlls, nuspec
-  [['net40', 'net-4.0']].each{|fw|
+  [['net45', 'net-4.5']].each{|fw|
     takeFrom = File.join(stage, fw[1], what_dlls)
+    puts "Taking #{takeFrom}"
     Dir.glob(takeFrom).each do |f|
+      puts "File: #{f}, #{fw[0]}"
       nuspec.file(f.gsub("/", "\\"), "lib\\#{fw[0]}")
     end
   }
 end
 
+def commit_data
+  begin
+    commit = `git rev-parse --short HEAD`.chomp()[0,6]
+    git_date = `git log -1 --date=iso --pretty=format:%ad`
+    commit_date = DateTime.parse( git_date ).strftime("%Y-%m-%d %H%M%S")
+  rescue Exception => e
+    puts e.inspect
+    commit = (ENV['BUILD_VCS_NUMBER'] || "000000")[0,6]
+    commit_date = Time.new.strftime("%Y-%m-%d %H%M%S")
+  end
+  [commit, commit_date]
+end
+
+task :versioning do
+  ver = SemVer.find
+  revision = (ENV['BUILD_NUMBER'] || ver.patch).to_i
+  var = SemVer.new(ver.major, ver.minor, revision, ver.special)
+  
+  # extensible number w/ git hash
+  ENV['BUILD_VERSION'] = BUILD_VERSION = ver.format("%M.%m.%p%s") + ".#{commit_data()[0]}"
+  
+  # nuget (not full semver 2.0.0-rc.1 support) see http://nuget.codeplex.com/workitem/1796
+  ENV['NUGET_VERSION'] = NUGET_VERSION = ver.format("%M.%m.%p%s")
+  
+  # purely M.m.p format
+  ENV['FORMAL_VERSION'] = FORMAL_VERSION = "#{ SemVer.new(ver.major, ver.minor, revision).format "%M.%m.%p"}"
+  puts "##teamcity[buildNumber '#{BUILD_VERSION}']" # tell teamcity our decision
+end
+
 def waitfor(&block)
-	checks = 0
+  checks = 0
 
-	until block.call || checks >10
-		sleep 0.5
-		checks += 1
-	end
+  until block.call || checks >10
+    sleep 0.5
+    checks += 1
+  end
 
-	raise 'Waitfor timeout expired. Make sure that you aren\'t running something from the build output folders, or that you have browsed to it through Explorer.' if checks > 10
+  raise 'Waitfor timeout expired. Make sure that you aren\'t running something from the build output folders, or that you have browsed to it through Explorer.' if checks > 10
 end

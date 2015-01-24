@@ -1,7 +1,6 @@
 namespace NewId
 {
     using System;
-    using System.Diagnostics.Contracts;
     using Formatters;
     using Providers;
 
@@ -17,15 +16,13 @@ namespace NewId
         IComparable,
         IFormattable
     {
-        const int LowercaseA = 0x61;
         public static readonly NewId Empty = new NewId(0, 0, 0, 0);
-        static INewIdFormatter _braceFormatter = new DashedHexFormatter('{', '}');
-        static INewIdFormatter _dashedHexFormatter = new DashedHexFormatter();
+        static readonly INewIdFormatter _braceFormatter = new DashedHexFormatter('{', '}');
+        static readonly INewIdFormatter _dashedHexFormatter = new DashedHexFormatter();
 
+        static readonly INewIdFormatter _hexFormatter = new HexFormatter();
+        static readonly INewIdFormatter _parenFormatter = new DashedHexFormatter('(', ')');
         static NewIdGenerator _generator;
-
-        static INewIdFormatter _hexFormatter = new HexFormatter();
-        static INewIdFormatter _parenFormatter = new DashedHexFormatter('(', ')');
         static ITickProvider _tickProvider;
         static IWorkerIdProvider _workerIdProvider;
 
@@ -40,18 +37,18 @@ namespace NewId
         /// <param name="bytes"></param>
         public NewId(byte[] bytes)
         {
-            Contract.Requires(bytes != null, "bytes cannot be null");
-            Contract.Requires(bytes.Length == 16, "Exactly 16 bytes expected");
-            Contract.EndContractBlock();
+            if (bytes == null)
+                throw new ArgumentNullException("bytes");
+            if (bytes.Length != 16)
+                throw new ArgumentException("Exactly 16 bytes expected", "bytes");
 
             FromByteArray(bytes, out _a, out _b, out _c, out _d);
         }
 
         public NewId(string value)
         {
-            Contract.Requires(value != null, "value cannot be null");
-            Contract.Requires(value.Length > 0, "value cannot be empty");
-            Contract.EndContractBlock();
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentException("must not be null or empty", "value");
 
             var guid = new Guid(value);
 
@@ -83,7 +80,7 @@ namespace NewId
 
         static IWorkerIdProvider WorkerIdProvider
         {
-            get { return _workerIdProvider ?? (_workerIdProvider = new NetworkAddressWorkerIdProvider()); }
+            get { return _workerIdProvider ?? (_workerIdProvider = new BestPossibleWorkerIdProvider()); }
         }
 
         static ITickProvider TickProvider
@@ -165,7 +162,7 @@ namespace NewId
 
         byte[] GetFormatteryArray()
         {
-            byte[] bytes = new byte[16];
+            var bytes = new byte[16];
             bytes[0] = (byte)(_d >> 24);
             bytes[1] = (byte)(_d >> 16);
             bytes[2] = (byte)(_d >> 8);
