@@ -7,8 +7,8 @@ namespace NewId.Providers
     public class StopwatchTickProvider :
         ITickProvider
     {
+        readonly Stopwatch _stopwatch;
         DateTime _start;
-        Stopwatch _stopwatch;
 
         public StopwatchTickProvider()
         {

@@ -31,7 +31,7 @@ namespace NewId.Providers
 
             try
             {
-                return new HostNameSHA1WorkerIdProvider().GetWorkerId(index);
+                return new HostNameHashWorkerIdProvider().GetWorkerId(index);
             }
             catch (Exception ex)
             {

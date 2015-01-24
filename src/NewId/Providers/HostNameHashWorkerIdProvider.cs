@@ -6,7 +6,7 @@ namespace NewId.Providers
     using System.Text;
 
 
-    public class HostNameSHA1WorkerIdProvider :
+    public class HostNameHashWorkerIdProvider :
         IWorkerIdProvider
     {
         public byte[] GetWorkerId(int index)
@@ -20,8 +20,11 @@ namespace NewId.Providers
             {
                 string hostName = Dns.GetHostName();
 
-                SHA1 hasher = SHA1.Create();
-                byte[] hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(hostName));
+                byte[] hash;
+                using (SHA1 hasher = SHA1.Create())
+                {
+                    hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(hostName));
+                }
 
                 var bytes = new byte[6];
                 Buffer.BlockCopy(hash, 12, bytes, 0, 6);

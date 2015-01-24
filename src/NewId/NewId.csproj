@@ -57,7 +57,7 @@
     <Compile Include="Parsers\ZBase32Parser.cs" />
     <Compile Include="Providers\BestPossibleWorkerIdProvider.cs" />
     <Compile Include="Providers\DateTimeTickProvider.cs" />
-    <Compile Include="Providers\HostNameSHA1WorkerIdProvider.cs" />
+    <Compile Include="Providers\HostNameHashWorkerIdProvider.cs" />
     <Compile Include="Providers\NetworkAddressWorkerIdProvider.cs" />
     <Compile Include="Providers\StopwatchTickProvider.cs" />
     <Compile Include="Providers\WMINetworkAddressWorkerIdProvider.cs" />

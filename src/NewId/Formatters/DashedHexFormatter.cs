@@ -6,7 +6,7 @@
         readonly char _prefix;
         readonly char _suffix;
         readonly int _alpha;
-        int _length;
+        readonly int _length;
 
         public DashedHexFormatter(char prefix = '\0', char suffix = '\0', bool upperCase = false)
         {
@@ -65,7 +65,7 @@
                 result[offset++] = HexToChar(value, _alpha);
             }
             if (_suffix != '\0')
-                result[offset++] = _suffix;
+                result[offset] = _suffix;
 
             return new string(result, 0, _length);
         }
