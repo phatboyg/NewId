@@ -1,4 +1,4 @@
-﻿namespace NewId.Formatters
+﻿namespace MassTransit.NewIdFormatters
 {
     using System;
 

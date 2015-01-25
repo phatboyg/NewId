@@ -1,4 +1,4 @@
-﻿namespace NewId.Formatters
+﻿namespace MassTransit.NewIdFormatters
 {
     public class HexFormatter :
         INewIdFormatter
@@ -17,7 +17,7 @@
             int offset = 0;
             for (int i = 0; i < 16; i++)
             {
-                var value = bytes[i];
+                byte value = bytes[i];
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }

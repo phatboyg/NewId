@@ -1,4 +1,4 @@
-﻿namespace NewId.Parsers
+﻿namespace MassTransit.NewIdParsers
 {
     using System;
     using System.Diagnostics.Contracts;

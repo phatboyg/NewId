@@ -1,4 +1,4 @@
-namespace NewId.Providers
+namespace MassTransit.NewIdProviders
 {
     using System;
     using System.Collections.Generic;

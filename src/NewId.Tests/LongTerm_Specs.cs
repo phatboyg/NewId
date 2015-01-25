@@ -1,9 +1,10 @@
-﻿namespace NewId.Tests
+﻿namespace MassTransit.NewIdTests
 {
     using System;
     using System.Data.SqlTypes;
+    using NewIdProviders;
     using NUnit.Framework;
-    using Providers;
+
 
     [TestFixture]
     public class Generating_ids_over_time
@@ -18,9 +19,7 @@
 
             var ids = new NewId[limit];
             for (int i = 0; i < limit; i++)
-            {
                 ids[i] = generator.Next();
-            }
 
             for (int i = 0; i < limit - 1; i++)
             {
@@ -34,17 +33,19 @@
             }
         }
 
+
         class TimeLapseTickProvider :
             ITickProvider
         {
-            DateTime _previous = DateTime.UtcNow;
             TimeSpan _interval = TimeSpan.FromSeconds(2);
+            DateTime _previous = DateTime.UtcNow;
+
             public long Ticks
             {
                 get
                 {
                     _previous = _previous + _interval;
-                    _interval = TimeSpan.FromSeconds((long) _interval.TotalSeconds + 30);
+                    _interval = TimeSpan.FromSeconds((long)_interval.TotalSeconds + 30);
                     return _previous.Ticks;
                 }
             }

@@ -1,6 +1,7 @@
-﻿namespace NewId
+﻿namespace MassTransit
 {
     using System;
+
 
     public static class NewIdExtensions
     {

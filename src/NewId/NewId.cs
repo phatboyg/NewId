@@ -1,8 +1,8 @@
-namespace NewId
+namespace MassTransit
 {
     using System;
-    using Formatters;
-    using Providers;
+    using NewIdFormatters;
+    using NewIdProviders;
 
 
     /// <summary>

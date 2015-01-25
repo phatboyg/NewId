@@ -1,11 +1,46 @@
-﻿namespace NewId.Tests
+﻿namespace MassTransit.NewIdTests
 {
     using System;
     using NUnit.Framework;
 
+
     [TestFixture]
     public class When_interoperating_with_the_guid_type
     {
+        [Test]
+        public void Should_convert_from_a_guid_quickly()
+        {
+            Guid g = Guid.NewGuid();
+
+            NewId n = g.ToNewId();
+
+            string ns = n.ToString();
+            string gs = g.ToString();
+
+            Assert.AreEqual(ns, gs);
+        }
+
+        [Test]
+        public void Should_convert_to_guid_quickly()
+        {
+            NewId n = NewId.Next();
+
+            Guid g = n.ToGuid();
+
+            string ns = n.ToString();
+            string gs = g.ToString();
+
+            Assert.AreEqual(ns, gs);
+        }
+
+        [Test]
+        public void Should_display_sequentially_for_newid()
+        {
+            NewId id = NewId.Next();
+
+            Console.WriteLine(id.ToString("DS"));
+        }
+
         [Test]
         public void Should_make_the_round_trip_successfully_via_bytes()
         {
@@ -75,57 +110,17 @@
         }
 
         [Test]
-        public void Should_work_from_newid_to_guid_to_newid()
-        {
-            NewId n = NewId.Next();
-
-            var g = new Guid(n.ToByteArray());
-
-            var ng = new NewId(g.ToByteArray());
-
-            Console.WriteLine(g.ToString("D"));
-
-            Assert.AreEqual(n, ng);
-        }
-
-        [Test]
         public void Should_properly_handle_string_passthrough()
         {
             NewId n = NewId.Next();
 
-            var ns = n.ToString("D");
+            string ns = n.ToString("D");
 
             var g = new Guid(ns);
 
             var nn = new NewId(g.ToString("D"));
 
             Assert.AreEqual(n, nn);
-        }
-
-        [Test]
-        public void Should_convert_to_guid_quickly()
-        {
-            NewId n = NewId.Next();
-
-            Guid g = n.ToGuid();
-
-            var ns = n.ToString();
-            var gs = g.ToString();
-
-            Assert.AreEqual(ns, gs);
-        }
-
-        [Test]
-        public void Should_convert_from_a_guid_quickly()
-        {
-            Guid g = Guid.NewGuid();
-
-            NewId n = g.ToNewId();
-
-            var ns = n.ToString();
-            var gs = g.ToString();
-
-            Assert.AreEqual(ns, gs);
         }
 
         [Test]
@@ -138,11 +133,17 @@
         }
 
         [Test]
-        public void Should_display_sequentially_for_newid()
+        public void Should_work_from_newid_to_guid_to_newid()
         {
-            var id = NewId.Next();
+            NewId n = NewId.Next();
 
-            Console.WriteLine(id.ToString("DS"));
+            var g = new Guid(n.ToByteArray());
+
+            var ng = new NewId(g.ToByteArray());
+
+            Console.WriteLine(g.ToString("D"));
+
+            Assert.AreEqual(n, ng);
         }
     }
 }

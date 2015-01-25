@@ -1,4 +1,4 @@
-﻿namespace NewId.Formatters
+﻿namespace MassTransit.NewIdFormatters
 {
     public class ZBase32Formatter :
         Base32Formatter

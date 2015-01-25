@@ -1,11 +1,11 @@
-﻿namespace NewId.Tests
+﻿namespace MassTransit.NewIdTests
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Formatters;
+    using NewIdFormatters;
+    using NewIdParsers;
     using NUnit.Framework;
-    using Parsers;
 
 
     [TestFixture]
@@ -57,6 +57,38 @@
         }
 
         [Test]
+        public void Should_convert_back_using_parser()
+        {
+            var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
+
+            var formatter = new ZBase32Formatter(true);
+
+            string ns = n.ToString(formatter);
+
+            var parser = new ZBase32Parser();
+            NewId newId = parser.Parse(ns);
+
+
+            Assert.AreEqual(n, newId);
+        }
+
+        [Test]
+        public void Should_convert_back_using_standard_parser()
+        {
+            var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
+
+            var formatter = new Base32Formatter(true);
+
+            string ns = n.ToString(formatter);
+
+            var parser = new Base32Parser();
+            NewId newId = parser.Parse(ns);
+
+
+            Assert.AreEqual(n, newId);
+        }
+
+        [Test]
         public void Should_convert_using_custom_base32_formatting_characters()
         {
             var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
@@ -93,38 +125,6 @@
         }
 
         [Test]
-        public void Should_convert_back_using_standard_parser()
-        {
-            var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
-
-            var formatter = new Base32Formatter(true);
-
-            string ns = n.ToString(formatter);
-
-            var parser = new Base32Parser();
-            var newId = parser.Parse(ns);
-
-
-            Assert.AreEqual(n, newId);
-        }
-
-        [Test]
-        public void Should_convert_back_using_parser()
-        {
-            var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
-
-            var formatter = new ZBase32Formatter(true);
-
-            string ns = n.ToString(formatter);
-
-            var parser = new ZBase32Parser();
-            var newId = parser.Parse(ns);
-
-
-            Assert.AreEqual(n, newId);
-        }
-
-        [Test]
         public void Should_translate_often_transposed_characters_to_proper_values()
         {
             var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
@@ -132,7 +132,7 @@
             string ns = "6438A9RK2BNJTMRZ8J0OXE0UBY";
 
             var parser = new ZBase32Parser(true);
-            var newId = parser.Parse(ns);
+            NewId newId = parser.Parse(ns);
 
 
             Assert.AreEqual(n, newId);

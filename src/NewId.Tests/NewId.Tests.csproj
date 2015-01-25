@@ -8,7 +8,7 @@
     <ProjectGuid>{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NewId.Tests</RootNamespace>
+    <RootNamespace>MassTransit.NewIdTests</RootNamespace>
     <AssemblyName>NewId.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

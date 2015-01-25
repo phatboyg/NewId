@@ -13,7 +13,8 @@ props = {
   :output => File.expand_path("build_output"),
   :artifacts => File.expand_path("build_artifacts"),
   :projects => ["NewId"],
-  :lib => File.expand_path("lib")
+  :lib => File.expand_path("lib"),
+  :keyfile => File.expand_path("NewId.snk")
 }
 
 desc "**Default**, compiles and runs tests"
@@ -56,6 +57,8 @@ msbuild :build do |msb|
 	msb.properties :Configuration => "Release",
 		:Platform => 'Any CPU'
 	msb.use :net4
+  msb.properties[:SignAssembly] = 'true'
+  msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile]
 	msb.targets :Clean, :Build
 	msb.solution = 'src/NewId.sln'
 end

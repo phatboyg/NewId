@@ -1,4 +1,4 @@
-﻿namespace NewId.Parsers
+﻿namespace MassTransit.NewIdParsers
 {
     public class ZBase32Parser :
         Base32Parser

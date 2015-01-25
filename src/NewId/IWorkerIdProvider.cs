@@ -1,4 +1,4 @@
-namespace NewId
+namespace MassTransit
 {
     public interface IWorkerIdProvider
     {

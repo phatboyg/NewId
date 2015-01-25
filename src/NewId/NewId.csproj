@@ -8,7 +8,7 @@
     <ProjectGuid>{660D8862-F851-4C9B-A8AB-62A7EEA65614}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NewId</RootNamespace>
+    <RootNamespace>MassTransit</RootNamespace>
     <AssemblyName>NewId</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -42,10 +42,10 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Formatters\Base32Formatter.cs" />
-    <Compile Include="Formatters\DashedHexFormatter.cs" />
-    <Compile Include="Formatters\HexFormatter.cs" />
-    <Compile Include="Formatters\ZBase32Formatter.cs" />
+    <Compile Include="NewIdFormatters\Base32Formatter.cs" />
+    <Compile Include="NewIdFormatters\DashedHexFormatter.cs" />
+    <Compile Include="NewIdFormatters\HexFormatter.cs" />
+    <Compile Include="NewIdFormatters\ZBase32Formatter.cs" />
     <Compile Include="INewIdFormatter.cs" />
     <Compile Include="INewIdParser.cs" />
     <Compile Include="NewIdExtensions.cs" />
@@ -53,14 +53,14 @@
     <Compile Include="ITickProvider.cs" />
     <Compile Include="NewId.cs" />
     <Compile Include="NewIdGenerator.cs" />
-    <Compile Include="Parsers\Base32Parser.cs" />
-    <Compile Include="Parsers\ZBase32Parser.cs" />
-    <Compile Include="Providers\BestPossibleWorkerIdProvider.cs" />
-    <Compile Include="Providers\DateTimeTickProvider.cs" />
-    <Compile Include="Providers\HostNameHashWorkerIdProvider.cs" />
-    <Compile Include="Providers\NetworkAddressWorkerIdProvider.cs" />
-    <Compile Include="Providers\StopwatchTickProvider.cs" />
-    <Compile Include="Providers\WMINetworkAddressWorkerIdProvider.cs" />
+    <Compile Include="NewIdParsers\Base32Parser.cs" />
+    <Compile Include="NewIdParsers\ZBase32Parser.cs" />
+    <Compile Include="NewIdProviders\BestPossibleWorkerIdProvider.cs" />
+    <Compile Include="NewIdProviders\DateTimeTickProvider.cs" />
+    <Compile Include="NewIdProviders\HostNameHashWorkerIdProvider.cs" />
+    <Compile Include="NewIdProviders\NetworkAddressWorkerIdProvider.cs" />
+    <Compile Include="NewIdProviders\StopwatchTickProvider.cs" />
+    <Compile Include="NewIdProviders\WMINetworkAddressWorkerIdProvider.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
