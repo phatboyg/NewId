@@ -18,7 +18,8 @@ namespace MassTransit.NewIdProviders
 
         public long Ticks
         {
-            get { return _start.AddTicks(_stopwatch.ElapsedTicks).Ticks; }
+            // Stopwatch and Timespan ticks are not the same, use Stompwatch.ElapsedMilliseconds which does a proper conversion 
+            get { return _start.AddMilliseconds(_stopwatch.ElapsedMilliseconds).Ticks; }
         }
     }
 }
