@@ -55,6 +55,7 @@
     <Compile Include="LongTerm_Specs.cs" />
     <Compile Include="NetworkAddress_Specs.cs" />
     <Compile Include="NewId_Specs.cs" />
+    <Compile Include="Provider_Specs.cs" />
     <Compile Include="Usage_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
