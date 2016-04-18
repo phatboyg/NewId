@@ -29,3 +29,14 @@ NewId id = new NewId("11790000-cf25-b808-dc58-08d367322210");
 var bytes = new byte[] { 16, 23, 54, 74, 21, 14, 75, 32, 44, 41, 31, 10, 11, 12, 86, 42 };
 NewId theId = new NewId(bytes);
 ```
+### When NOT to use sequential IDs
+(Adapted from the flake readme)
+The generated ids are predictable by design. They should not be used in scenarios where unpredictability is a desired feature. 
+These IDs should **NOT** be used for:
+- Generating passwords
+- Security tokens 
+- Anything else you wouldn't want someone to be able to guess.
+
+NewId generated ids expose the identity of the machine which generated the id (by way of its MAC address) and the time at which it did so. This could be a problem for some security-sensitive applications.
+
+**Don't** do modulo 2 arithmetic on flake ids with the expectation of random distribution. 
