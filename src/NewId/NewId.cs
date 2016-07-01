@@ -69,7 +69,9 @@ namespace MassTransit
         {
             _a = (f << 24) | (g << 16) | (h << 8) | i;
             _b = (j << 24) | (k << 16) | (d << 8) | e;
+#pragma warning disable 675
             _c = (c << 16) | b;
+#pragma warning restore 675
             _d = a;
         }
 

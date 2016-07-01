@@ -1,0 +1,56 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [
+    ""
+  ],
+  "packOptions": {
+    "tags": [
+      ""
+    ],
+    "projectUrl": "",
+    "licenseUrl": ""
+  },
+  "dependencies": {},
+  "buildOptions": {
+    "warningsAsErrors": true,
+    "define": [],
+    "embed": {
+      "includeFiles": []
+    }
+  },
+  "frameworks": {
+    "net45": {
+      "buildOptions": {
+        "define": []
+      },
+      "frameworkAssemblies": {
+        "System.Diagnostics.Contracts": "4.0.0.0",
+        "System.Management": "4.0.0.0"
+      }
+    },
+    "netstandard1.3": {
+      "imports": [
+        "dotnet55",
+        "portable-net45+win8"
+      ],
+      "buildOptions": {
+        "debugType": "portable",
+        "define": [
+          "NETCORE"
+        ]
+      },
+      "dependencies": {
+        "Microsoft.CSharp": "4.0.1",
+        "System.Collections": "4.0.11",
+        "System.Diagnostics.Contracts": "4.0.1",
+        "System.Linq": "4.1.0",
+        "System.Net.NameResolution": "4.0.0",
+        "System.Net.NetworkInformation": "4.1.0",
+        "System.Security.Cryptography.Algorithms": "4.2.0",
+        "System.Runtime.Extensions": "4.1.0",
+        "System.Threading": "4.0.11"
+      }
+    }
+  }
+}

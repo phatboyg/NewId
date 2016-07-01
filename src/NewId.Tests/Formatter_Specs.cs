@@ -14,7 +14,12 @@
         [Test]
         public void Should_compare_known_conversions()
         {
+#if NETCORE
+            string directory = AppContext.BaseDirectory;
+#else
             string directory = AppDomain.CurrentDomain.BaseDirectory;
+#endif
+
             string newIdFileName = Path.Combine(directory, "guids.txt");
             string textsFileName = Path.Combine(directory, "texts.txt");
 

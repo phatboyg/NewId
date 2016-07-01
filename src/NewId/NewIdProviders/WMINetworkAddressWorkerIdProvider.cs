@@ -1,3 +1,4 @@
+#if !NETCORE
 namespace MassTransit.NewIdProviders
 {
     using System;
@@ -59,3 +60,4 @@ namespace MassTransit.NewIdProviders
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿namespace MassTransit.NewIdTests
+﻿#if !NETCORE
+namespace MassTransit.NewIdTests
 {
     using System;
     using System.Linq;
@@ -82,7 +83,7 @@
 
                     Console.WriteLine("Adapter: {0}-{1}", propertyValue, typeValue);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }
@@ -115,3 +116,4 @@
         }
     }
 }
+#endif

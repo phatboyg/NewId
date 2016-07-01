@@ -24,3 +24,7 @@ _ReSharper*
 # osx noise
 .DS_Store
 Gemfile.lock
+
+restore.dg
+*project.lock.json
+/src/NewId.Tests/TestResult.xml
