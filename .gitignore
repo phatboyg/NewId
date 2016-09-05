@@ -22,3 +22,10 @@ _ReSharper*
 # osx noise
 .DS_Store
 Gemfile.lock
+
+
+# FAKE artifacts
+.fake
+
+# Build tools
+src/.buildTools
