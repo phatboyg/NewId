@@ -8,8 +8,8 @@ open Fake.SemVerHelper
 let buildOutputPath = "./build_output"
 let buildArtifactPath = "./build_artifacts"
 let nugetWorkingPath = FullName "./build_temp"
-let packagesPath = FullName "./src/packages"
 let keyFile = FullName "./NewId.snk"
+let buildMode = getBuildParamOrDefault "buildMode" "Release"
 
 let assemblyVersion = "3.0.0.0"
 let baseVersion = "3.0.0"
@@ -23,6 +23,7 @@ let branch = (fun _ ->
 )
 
 let FileVersion = (environVarOrDefault "APPVEYOR_BUILD_VERSION" (Version + "." + "0"))
+let commitHash = getCurrentHash()
 
 let informationalVersion = (fun _ ->
   let branchName = (branch ".")
@@ -43,21 +44,17 @@ let NuGetVersion = nugetVersion()
 printfn "Using version: %s" Version
 
 Target "Clean" (fun _ ->
-  ensureDirectory buildOutputPath
-  ensureDirectory buildArtifactPath
-  ensureDirectory nugetWorkingPath
 
-  CleanDir buildOutputPath
-  CleanDir buildArtifactPath
-  CleanDir nugetWorkingPath
-)
+    !! buildOutputPath
+      ++ buildArtifactPath
+      ++ nugetWorkingPath
+      ++ "src/*/bin"
+      ++ "src/*/obj"
+        |> CleanDirs
 
-Target "RestorePackages" (fun _ -> 
-     "./src/NewId.sln"
-     |> RestoreMSSolutionPackages (fun p ->
-         { p with
-             OutputPath = packagesPath
-             Retries = 4 })
+    ensureDirectory buildOutputPath
+    ensureDirectory buildArtifactPath
+    ensureDirectory nugetWorkingPath
 )
 
 Target "Build" (fun _ ->
@@ -69,80 +66,56 @@ Target "Build" (fun _ ->
       Attribute.Version assemblyVersion
       Attribute.FileVersion FileVersion
       Attribute.InformationalVersion InfoVersion
+      Attribute.Metadata("githash", commitHash)
     ]
 
-  let buildMode = getBuildParamOrDefault "buildMode" "Release"
-  let setParams defaults = { 
-    defaults with
-        Verbosity = Some(Quiet)
-        Targets = ["Clean"; "Build"]
-        Properties =
-            [
-                "Optimize", "True"
-                "DebugSymbols", "True"
-                "RestorePackages", "True"
-                "Configuration", buildMode
-                "SignAssembly", "True"
-                "AssemblyOriginatorKeyFile", keyFile
-                "TargetFrameworkVersion", "v4.5.2"
-                "Platform", "Any CPU"
-            ]
-  }
+  let restore f = DotNetCli.Restore (fun p ->
+                { p with
+                    AdditionalArgs = [f] })
 
-  build setParams @".\src\NewId.sln"
-      |> DoNothing
+  let projectJsonFiles = !! "src/*/project.json"
+
+  projectJsonFiles
+       |> Seq.iter restore
+
+  projectJsonFiles
+        |> DotNetCli.Build
+            (fun p ->
+                { p with
+                    Configuration = buildMode })
 )
-
-let testDlls = !! ("./src/NewId.Tests/bin/Release/*.Tests.dll")
 
 Target "UnitTests" (fun _ ->
-    testDlls
-        |> NUnit (fun p -> 
-            {p with
-                Framework = "v4.0.30319"
-                DisableShadowCopy = true; 
-                OutputFile = buildArtifactPath + "/nunit-test-results.xml"})
-)
 
-type packageInfo = {
-    Project: string
-    PackageFile: string
-    Summary: string
-    Files: list<string*string option*string option>
-}
+    !! "src/NewId.Tests/project.json"
+        |>  DotNetCli.Test
+            (fun p ->
+                    { p with
+                        Configuration = buildMode
+                        AdditionalArgs = ["--result " + buildArtifactPath + "/nunit-test-results.xml"] })
+)
 
 Target "Package" (fun _ ->
 
-  let nugs = [| { Project = "NewId"
-                  Summary = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-                  PackageFile = @".\src\NewId\packages.config"
-                  Files = [ (@"..\src\NewId\bin\Release\NewId.*", Some @"lib\net452", None);
-                            (@"..\src\NewId\**\*.cs", Some "src", None) ] }
-             |]
+    let libDir = nugetWorkingPath + "/lib"
+    CopyRecursive "./src/NewId/bin/Release" libDir true |> ignore
 
-  nugs
-    |> Array.iter (fun nug ->
+    !! (libDir + "/**/*.deps.json")
+      |> Seq.iter DeleteFile
 
-      let getDeps daNug : NugetDependencies =
-        if daNug.Project = "NewId" then []
-        else ("NewId", NuGetVersion) :: (getDependencies daNug.PackageFile)
+    let setParams defaults = {
+      defaults with 
+        Authors = ["Chris Patterson"]
+        Description = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
+        OutputPath = buildArtifactPath
+        Project = "NewId"
+        Summary = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
+        SymbolPackage = NugetSymbolPackage.Nuspec
+        Version = Version
+        WorkingDir =  nugetWorkingPath
+    } 
 
-      let setParams defaults = {
-        defaults with 
-          Authors = ["Chris Patterson"]
-          Description = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-          OutputPath = buildArtifactPath
-          Project = nug.Project
-          Dependencies = (getDeps nug)
-          Summary = nug.Summary
-          SymbolPackage = NugetSymbolPackage.Nuspec
-          Version = NuGetVersion
-          WorkingDir = nugetWorkingPath
-          Files = nug.Files
-      } 
-
-      NuGet setParams (FullName "./template.nuspec")
-    )
+    NuGet setParams (FullName "./template.nuspec")
 )
 
 Target "Default" (fun _ ->
@@ -150,7 +123,6 @@ Target "Default" (fun _ ->
 )
 
 "Clean"
-  ==> "RestorePackages"
   ==> "Build"
   ==> "UnitTests"
   ==> "Package"
