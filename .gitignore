@@ -19,6 +19,8 @@ _ReSharper*
 *.bak
 *.orig
 
+.fake
+
 # osx noise
 .DS_Store
 Gemfile.lock
