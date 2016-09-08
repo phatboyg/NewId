@@ -1,3 +1,4 @@
+#if !NETSTANDARD10
 namespace MassTransit.NewIdProviders
 {
     using System;
@@ -39,3 +40,4 @@ namespace MassTransit.NewIdProviders
         }
     }
 }
+#endif

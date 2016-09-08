@@ -1,0 +1,72 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [
+    ""
+  ],
+  "packOptions": {
+    "tags": [
+      ""
+    ],
+    "projectUrl": "",
+    "licenseUrl": ""
+  },
+  "dependencies": {
+    "NewId": {
+      "target": "project"
+    },
+    "dotnet-test-nunit": "3.4.0-beta-1",
+    "NUnit": "3.4.1"
+  },
+  "testRunner": "nunit",
+  "buildOptions": {
+    "warningsAsErrors": true,
+    "debugType": "portable",
+    "emitEntryPoint": true,
+    "define": [
+    ],
+    "embed": {
+      "includeFiles": [
+      ]
+    },
+    "copyToOutput": {
+      "includeFiles": [
+        "guids.txt",
+        "texts.txt"
+      ]
+    }
+  },
+  "frameworks": {
+    "net452": {
+      "buildOptions": {
+        "define": [
+        ]
+      },
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0",
+        "System.Xml": "4.0.0.0"
+      }
+    },
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet55",
+        "portable-net45+win8"
+      ],
+      "buildOptions": {
+        "debugType": "portable",
+        "define": [
+          "NETCORE"
+        ]
+      },
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        },
+        "Microsoft.CSharp": "4.0.1",
+        "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+        "System.Data.SqlClient": "4.1.0"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+﻿{
+  "frameworks": {
+    "net45": {}
+  },
+  "dependencies": {
+    "NUnit": "3.4.1"
+  },
+  "runtimes": {
+    "win": {}
+  }
+}

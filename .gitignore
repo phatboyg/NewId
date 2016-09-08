@@ -1,5 +1,6 @@
-build_output/*
-build_artifacts/*
+/build_output
+/build_artifacts
+/build_temp
 doc/build/*
 
 *.suo
@@ -24,3 +25,7 @@ _ReSharper*
 # osx noise
 .DS_Store
 Gemfile.lock
+
+restore.dg
+*project.lock.json
+/src/NewId.Tests/TestResult.xml

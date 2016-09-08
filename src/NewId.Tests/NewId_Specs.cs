@@ -85,10 +85,11 @@
 
             int threadCount = 20;
 
+#if !NETCORE
             int workerThreads, complete;
             ThreadPool.GetMinThreads(out workerThreads, out complete);
             ThreadPool.SetMinThreads(workerThreads + threadCount, complete);
-
+#endif
 
             var loopCount = 1024 * 1024;
 
