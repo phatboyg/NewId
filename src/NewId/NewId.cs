@@ -25,6 +25,7 @@ namespace MassTransit
         static NewIdGenerator _generator;
         static ITickProvider _tickProvider;
         static IWorkerIdProvider _workerIdProvider;
+        static IProcessIdProvider _processIdProvider;
 
         readonly Int32 _a;
         readonly Int32 _b;
@@ -75,12 +76,17 @@ namespace MassTransit
 
         static NewIdGenerator Generator
         {
-            get { return _generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider)); }
+            get { return _generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider)); }
         }
 
         static IWorkerIdProvider WorkerIdProvider
         {
             get { return _workerIdProvider ?? (_workerIdProvider = new BestPossibleWorkerIdProvider()); }
+        }
+
+        static IProcessIdProvider ProcessIdProvider
+        {
+            get { return _processIdProvider; }
         }
 
         static ITickProvider TickProvider
@@ -313,6 +319,11 @@ namespace MassTransit
         public static void SetWorkerIdProvider(IWorkerIdProvider provider)
         {
             _workerIdProvider = provider;
+        }
+
+        public static void SetProcessIdProvider(IProcessIdProvider provider)
+        {
+            _processIdProvider = provider;
         }
 
         public static void SetTickProvider(ITickProvider provider)

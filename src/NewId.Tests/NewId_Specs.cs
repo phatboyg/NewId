@@ -30,6 +30,24 @@
             Assert.LessOrEqual(difference, TimeSpan.FromMinutes(1));
         }
 
+        [Test, Explicit]
+        public void Should_be_able_to_extract_timestamp_with_process_id()
+        {
+            DateTime now = DateTime.UtcNow;
+            NewId.SetProcessIdProvider(new CurrentProcessIdProvider());
+            NewId id = NewId.Next();
+
+            DateTime timestamp = id.Timestamp;
+
+            Console.WriteLine("Now: {0}, Timestamp: {1}", now, timestamp);
+
+            TimeSpan difference = (timestamp - now);
+            if (difference < TimeSpan.Zero)
+                difference = difference.Negate();
+
+            Assert.LessOrEqual(difference, TimeSpan.FromMinutes(1));
+        }
+
         [Test]
         public void Should_generate_sequential_ids_quickly()
         {

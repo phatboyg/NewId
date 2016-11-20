@@ -14,14 +14,23 @@
         ushort _sequence;
 
 
-        public NewIdGenerator(ITickProvider tickProvider, IWorkerIdProvider workerIdProvider, int workerIndex = 0)
+        public NewIdGenerator(ITickProvider tickProvider, IWorkerIdProvider workerIdProvider, IProcessIdProvider processIdProvider = null, int workerIndex = 0)
         {
             _tickProvider = tickProvider;
 
             byte[] workerId = workerIdProvider.GetWorkerId(workerIndex);
 
             _c = workerId[0] << 24 | workerId[1] << 16 | workerId[2] << 8 | workerId[3];
-            _d = workerId[4] << 24 | workerId[5] << 16;
+
+            if(processIdProvider != null)
+            {
+                var processId = processIdProvider.GetProcessId();
+                _d = processId[0] << 24 | processId[1] << 16;
+            }
+            else
+            {
+                _d = workerId[4] << 24 | workerId[5] << 16;
+            }
         }
 
         public NewId Next()
