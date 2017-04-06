@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics.Contracts;
 
-
     public class Base32Parser :
         INewIdParser
     {
@@ -29,7 +28,6 @@
         public NewId Parse(string text)
         {
             Contract.Requires(text.Length == 26);
-
             var buffer = new char[32];
 
             int bufferOffset = 0;

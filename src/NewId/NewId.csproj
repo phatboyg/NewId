@@ -1,76 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{660D8862-F851-4C9B-A8AB-62A7EEA65614}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MassTransit</RootNamespace>
-    <AssemblyName>NewId</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../NewId.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewId.xml</DocumentationFile>
+    <Description>NewId is an ordered 128-bit unique identifier generator using the Flake algorithm.</Description>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <PackageProjectUrl>https://github.com/phatboyg/NewId</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/phatboyg/NewId/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/phatboyg/NewId</RepositoryUrl>
+    <PackageTags>MassTransit</PackageTags>
+    <Authors>Chris Patterson</Authors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
+  <ItemGroup Condition="  '$(TargetFramework)' == 'net452' ">
+     <Reference Include="System.Management" />
+     <Reference Include="System.Diagnostics.Contracts" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\SolutionVersion.cs">
-      <Link>Properties\SolutionVersion.cs</Link>
-    </Compile>
-    <Compile Include="IProcessIdProvider.cs" />
-    <Compile Include="NewIdFormatters\Base32Formatter.cs" />
-    <Compile Include="NewIdFormatters\DashedHexFormatter.cs" />
-    <Compile Include="NewIdFormatters\HexFormatter.cs" />
-    <Compile Include="NewIdFormatters\ZBase32Formatter.cs" />
-    <Compile Include="INewIdFormatter.cs" />
-    <Compile Include="INewIdParser.cs" />
-    <Compile Include="NewIdExtensions.cs" />
-    <Compile Include="IWorkerIdProvider.cs" />
-    <Compile Include="ITickProvider.cs" />
-    <Compile Include="NewId.cs" />
-    <Compile Include="NewIdGenerator.cs" />
-    <Compile Include="NewIdParsers\Base32Parser.cs" />
-    <Compile Include="NewIdParsers\ZBase32Parser.cs" />
-    <Compile Include="NewIdProviders\BestPossibleWorkerIdProvider.cs" />
-    <Compile Include="NewIdProviders\DateTimeTickProvider.cs" />
-    <Compile Include="NewIdProviders\ProcessIdProvider.cs" />
-    <Compile Include="NewIdProviders\HostNameHashWorkerIdProvider.cs" />
-    <Compile Include="NewIdProviders\NetworkAddressWorkerIdProvider.cs" />
-    <Compile Include="NewIdProviders\StopwatchTickProvider.cs" />
-    <Compile Include="NewIdProviders\WMINetworkAddressWorkerIdProvider.cs" />
+  <ItemGroup Condition="  '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
+    <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+    
 </Project>
