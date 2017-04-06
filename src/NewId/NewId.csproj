@@ -10,6 +10,7 @@
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
     <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
     
 </Project>
