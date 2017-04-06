@@ -1,8 +1,9 @@
 ﻿namespace MassTransit.NewIdParsers
 {
     using System;
+#if NET45
     using System.Diagnostics.Contracts;
-
+#endif
 
     public class Base32Parser :
         INewIdParser
@@ -28,8 +29,9 @@
 
         public NewId Parse(string text)
         {
+#if NET45
             Contract.Requires(text.Length == 26);
-
+#endif
             var buffer = new char[32];
 
             int bufferOffset = 0;
