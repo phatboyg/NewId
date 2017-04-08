@@ -16,7 +16,7 @@
     <PackageTags>MassTransit</PackageTags>
     <Authors>Chris Patterson</Authors>
   </PropertyGroup>
-  <ItemGroup Condition="  '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition="  '$(TargetFramework)' == 'net452' ">
      <Reference Include="System.Management" />
      <Reference Include="System.Diagnostics.Contracts" />
   </ItemGroup>
