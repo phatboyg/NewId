@@ -13,6 +13,10 @@
     <PackageReference Include="NUnit.Extension.VSProjectLoader" version="3.5.0" Version="3.5.0" />
     <PackageReference Include="NUnit.Runners" Version="3.5.0" />
   </ItemGroup>
+  <ItemGroup  Condition="  '$(TargetFramework)' == 'net45' ">
+     <Reference Include="System.Management" />
+     <Reference Include="System.Diagnostics.Contracts" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="guids.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
