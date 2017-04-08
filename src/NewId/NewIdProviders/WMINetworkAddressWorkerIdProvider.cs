@@ -1,3 +1,4 @@
+#if NET452
 namespace MassTransit.NewIdProviders
 {
     using System;
@@ -5,7 +6,6 @@ namespace MassTransit.NewIdProviders
     using System.Globalization;
     using System.Linq;
     using System.Management;
-
 
     public class WmiNetworkAddressWorkerIdProvider :
         IWorkerIdProvider
@@ -59,3 +59,4 @@ namespace MassTransit.NewIdProviders
         }
     }
 }
+#endif

@@ -19,7 +19,7 @@ namespace MassTransit.NewIdProviders
             {
                 exceptions.Add(ex);
             }
-
+#if NET452
             try
             {
                 return new WmiNetworkAddressWorkerIdProvider().GetWorkerId(index);
@@ -28,7 +28,7 @@ namespace MassTransit.NewIdProviders
             {
                 exceptions.Add(ex);
             }
-
+#endif
             try
             {
                 return new HostNameHashWorkerIdProvider().GetWorkerId(index);

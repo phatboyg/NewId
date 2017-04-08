@@ -5,9 +5,8 @@ open Fake.AssemblyInfoFile
 open Fake.Git.Information
 open Fake.SemVerHelper
 
-let buildOutputPath = "./build_output"
-let buildArtifactPath = "./build_artifacts"
-let nugetWorkingPath = FullName "./build_temp"
+let buildOutputPath = FullName "./build_output"
+let buildArtifactPath = FullName "./build_artifacts"
 let packagesPath = FullName "./src/packages"
 let keyFile = FullName "./NewId.snk"
 
@@ -45,19 +44,13 @@ printfn "Using version: %s" Version
 Target "Clean" (fun _ ->
   ensureDirectory buildOutputPath
   ensureDirectory buildArtifactPath
-  ensureDirectory nugetWorkingPath
 
   CleanDir buildOutputPath
   CleanDir buildArtifactPath
-  CleanDir nugetWorkingPath
 )
 
 Target "RestorePackages" (fun _ -> 
-     "./src/NewId.sln"
-     |> RestoreMSSolutionPackages (fun p ->
-         { p with
-             OutputPath = packagesPath
-             Retries = 4 })
+  DotNetCli.Restore (fun p -> { p with Project = "./src/" } )
 )
 
 Target "Build" (fun _ ->
@@ -70,68 +63,16 @@ Target "Build" (fun _ ->
       Attribute.FileVersion FileVersion
       Attribute.InformationalVersion InfoVersion
     ]
-
-  let buildMode = getBuildParamOrDefault "buildMode" "Release"
-  let setParams defaults = { 
-    defaults with
-        Verbosity = Some(Quiet)
-        Targets = ["Clean"; "Build"]
-        Properties =
-            [
-                "Optimize", "True"
-                "DebugSymbols", "True"
-                "RestorePackages", "True"
-                "Configuration", buildMode
-                "SignAssembly", "True"
-                "AssemblyOriginatorKeyFile", keyFile
-                "TargetFrameworkVersion", "v4.5.2"
-                "Platform", "Any CPU"
-            ]
-  }
-
-  build setParams @".\src\NewId.sln"
-      |> DoNothing
+  DotNetCli.Build (fun p-> { p with Project = @".\src\NewId"
+                                    Configuration= "Release"
+                                    Output = buildArtifactPath})
 )
 
-type packageInfo = {
-    Project: string
-    PackageFile: string
-    Summary: string
-    Files: list<string*string option*string option>
-}
-
 Target "Package" (fun _ ->
-
-  let nugs = [| { Project = "NewId"
-                  Summary = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-                  PackageFile = @".\src\NewId\packages.config"
-                  Files = [ (@"..\src\NewId\bin\Release\NewId.*", Some @"lib\net452", None);
-                            (@"..\src\NewId\**\*.cs", Some "src", None) ] }
-             |]
-
-  nugs
-    |> Array.iter (fun nug ->
-
-      let getDeps daNug : NugetDependencies =
-        if daNug.Project = "NewId" then []
-        else ("NewId", NuGetVersion) :: (getDependencies daNug.PackageFile)
-
-      let setParams defaults = {
-        defaults with 
-          Authors = ["Chris Patterson"]
-          Description = "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-          OutputPath = buildArtifactPath
-          Project = nug.Project
-          Dependencies = (getDeps nug)
-          Summary = nug.Summary
-          SymbolPackage = NugetSymbolPackage.Nuspec
-          Version = NuGetVersion
-          WorkingDir = nugetWorkingPath
-          Files = nug.Files
-      } 
-
-      NuGet setParams (FullName "./template.nuspec")
-    )
+  DotNetCli.Pack (fun p-> { p with 
+                                Project = @".\src\NewId"
+                                Configuration= "Release"
+                                OutputPath= buildArtifactPath })
 )
 
 Target "Default" (fun _ ->
