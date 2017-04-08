@@ -1,12 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net45</TargetFrameworks>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../NewId.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup  Condition="  '$(TargetFramework)' == 'net45' ">
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewId.xml</DocumentationFile>
+    <Description>NewId is an ordered 128-bit unique identifier generator using the Flake algorithm.</Description>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.0</Version>
+    <PackageProjectUrl>https://github.com/phatboyg/NewId</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/phatboyg/NewId/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/phatboyg/NewId</RepositoryUrl>
+    <PackageTags>MassTransit</PackageTags>
+    <Authors>Chris Patterson</Authors>
+  </PropertyGroup>
+  <ItemGroup Condition="  '$(TargetFramework)' == 'net45' ">
      <Reference Include="System.Management" />
      <Reference Include="System.Diagnostics.Contracts" />
   </ItemGroup>
-  <ItemGroup  Condition="  '$(TargetFramework)' == 'netstandard1.6' ">
+  <ItemGroup Condition="  '$(TargetFramework)' == 'netstandard1.6' ">
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
     <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
