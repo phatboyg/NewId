@@ -63,7 +63,7 @@ Target "Package" (fun _ ->
                                 Project = @".\src\NewId"
                                 Configuration= "Release"
                                 OutputPath= buildArtifactPath
-                                AdditionalArgs = versionArgs })
+                                AdditionalArgs = versionArgs @ [ @"--include-symbols"; @"--include-source" ] })
 )
 
 Target "Default" (fun _ ->

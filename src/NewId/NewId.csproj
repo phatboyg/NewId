@@ -3,6 +3,10 @@
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>../../NewId.snk</AssemblyOriginatorKeyFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>NewId</AssemblyName>
+    <PackageId>NewId</PackageId>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewId.xml</DocumentationFile>
