@@ -6,7 +6,7 @@ using System.Reflection;
 [assembly: AssemblyProductAttribute("NewId")]
 [assembly: AssemblyVersionAttribute("3.0.1.0")]
 [assembly: AssemblyFileVersionAttribute("3.0.1.0")]
-[assembly: AssemblyInformationalVersionAttribute("3.0.1.0 (p1/0ab6dafd)")]
+[assembly: AssemblyInformationalVersionAttribute("3.0.1.0")]
 namespace System {
     internal static class AssemblyVersionInformation {
         internal const System.String AssemblyTitle = "NewId";
@@ -14,6 +14,6 @@ namespace System {
         internal const System.String AssemblyProduct = "NewId";
         internal const System.String AssemblyVersion = "3.0.1.0";
         internal const System.String AssemblyFileVersion = "3.0.1.0";
-        internal const System.String AssemblyInformationalVersion = "3.0.1.0 (p1/0ab6dafd)";
+        internal const System.String AssemblyInformationalVersion = "3.0.1.0";
     }
 }

@@ -5,7 +5,6 @@ open Fake.AssemblyInfoFile
 open Fake.Git.Information
 open Fake.SemVerHelper
 
-let buildOutputPath = FullName "./build_output"
 let buildArtifactPath = FullName "./build_artifacts"
 let packagesPath = FullName "./src/packages"
 let keyFile = FullName "./NewId.snk"
@@ -38,14 +37,13 @@ let nugetVersion = (fun _ ->
 let InfoVersion = informationalVersion()
 let NuGetVersion = nugetVersion()
 
+let versionArgs = [ @"/p:Version=""" + NuGetVersion + @""""; @"/p:AssemblyVersion=""" + FileVersion + @""""; @"/p:FileVersion=""" + FileVersion + @""""; @"/p:InformationalVersion=""" + InfoVersion + @"""" ]
 
 printfn "Using version: %s" Version
 
 Target "Clean" (fun _ ->
-  ensureDirectory buildOutputPath
   ensureDirectory buildArtifactPath
 
-  CleanDir buildOutputPath
   CleanDir buildArtifactPath
 )
 
@@ -54,25 +52,18 @@ Target "RestorePackages" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-
-  CreateCSharpAssemblyInfo @".\src\SolutionVersion.cs"
-    [ Attribute.Title "NewId"
-      Attribute.Description "NewId is an ordered 128-bit unique identifier generator using the Flake algorithm."
-      Attribute.Product "NewId"
-      Attribute.Version assemblyVersion
-      Attribute.FileVersion FileVersion
-      Attribute.InformationalVersion InfoVersion
-    ]
   DotNetCli.Build (fun p-> { p with Project = @".\src\NewId"
                                     Configuration= "Release"
-                                    Output = buildArtifactPath})
+                                    Output = buildArtifactPath
+                                    AdditionalArgs = versionArgs })
 )
 
 Target "Package" (fun _ ->
   DotNetCli.Pack (fun p-> { p with 
                                 Project = @".\src\NewId"
                                 Configuration= "Release"
-                                OutputPath= buildArtifactPath })
+                                OutputPath= buildArtifactPath
+                                AdditionalArgs = versionArgs })
 )
 
 Target "Default" (fun _ ->
