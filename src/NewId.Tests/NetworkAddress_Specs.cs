@@ -11,20 +11,6 @@
     [TestFixture]
     public class When_getting_a_network_address_for_the_id_generator
     {
-        [Test, Explicit]
-        public void Should_match_perhaps()
-        {
-            var networkAddressWorkerIdProvider = new NetworkAddressWorkerIdProvider();
-
-            byte[] firstId = networkAddressWorkerIdProvider.GetWorkerId(0);
-
-            var wmiNetworkAddressWorkerIdProvider = new WmiNetworkAddressWorkerIdProvider();
-
-            byte[] secondId = wmiNetworkAddressWorkerIdProvider.GetWorkerId(2);
-
-
-            Assert.AreEqual(firstId, secondId);
-        }
 
         [Test]
         public void Should_pull_all_adapters()
@@ -43,17 +29,6 @@
         public void Should_pull_the_network_adapter_mac_address()
         {
             var networkIdProvider = new NetworkAddressWorkerIdProvider();
-
-            byte[] networkId = networkIdProvider.GetWorkerId(0);
-
-            Assert.IsNotNull(networkId);
-            Assert.AreEqual(6, networkId.Length);
-        }
-
-        [Test]
-        public void Should_pull_the_network_from_wmi()
-        {
-            var networkIdProvider = new WmiNetworkAddressWorkerIdProvider();
 
             byte[] networkId = networkIdProvider.GetWorkerId(0);
 
