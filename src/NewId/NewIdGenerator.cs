@@ -1,4 +1,5 @@
-﻿namespace MassTransit
+﻿
+namespace MassTransit
 {
     public class NewIdGenerator
     {
