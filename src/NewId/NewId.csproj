@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>../../NewId.snk</AssemblyOriginatorKeyFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>portable</DebugType>
     <AssemblyName>NewId</AssemblyName>
     <PackageId>NewId</PackageId>
+    <RootNamespace>MassTransit</RootNamespace>
   </PropertyGroup>
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\NewId.xml</DocumentationFile>
@@ -19,13 +20,12 @@
     <Authors>Chris Patterson</Authors>
   </PropertyGroup>
   <ItemGroup Condition="  '$(TargetFramework)' == 'net452' ">
-     <Reference Include="System.Management" />
-     <Reference Include="System.Diagnostics.Contracts" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Diagnostics.Contracts" />
   </ItemGroup>
-  <ItemGroup Condition="  '$(TargetFramework)' == 'netstandard1.6' ">
+  <ItemGroup Condition="  '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
     <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
-  </ItemGroup>    
+  </ItemGroup>
 </Project>

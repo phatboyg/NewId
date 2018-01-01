@@ -20,6 +20,7 @@ _ReSharper*
 *.orig
 
 .fake
+.idea
 
 # osx noise
 .DS_Store

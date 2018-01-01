@@ -82,7 +82,7 @@
 
                     Console.WriteLine("Adapter: {0}-{1}", propertyValue, typeValue);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }

@@ -1,13 +1,12 @@
-﻿namespace MassTransit.NewIdTests
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using MassTransit.NewIdFormatters;
+using MassTransit.NewIdParsers;
+using NUnit.Framework;
+
+namespace MassTransit.NewIdTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using NewIdFormatters;
-    using NewIdParsers;
-    using NUnit.Framework;
-
-
     [TestFixture]
     public class Using_the_newid_formatters
     {
