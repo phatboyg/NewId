@@ -9,8 +9,8 @@ let buildArtifactPath = FullName "./build_artifacts"
 let packagesPath = FullName "./src/packages"
 let keyFile = FullName "./NewId.snk"
 
-let assemblyVersion = "3.0.1.0"
-let baseVersion = "3.0.1"
+let assemblyVersion = "3.0.2.0"
+let baseVersion = "3.0.2"
 
 let semVersion : SemVerInfo = parse baseVersion
 
@@ -37,7 +37,7 @@ let nugetVersion = (fun _ ->
 let InfoVersion = informationalVersion()
 let NuGetVersion = nugetVersion()
 
-let versionArgs = [ @"/p:Version=""" + NuGetVersion + @""""; @"/p:AssemblyVersion=""" + FileVersion + @""""; @"/p:FileVersion=""" + FileVersion + @""""; @"/p:InformationalVersion=""" + InfoVersion + @"""" ]
+let versionArgs = [ @"/p:Version=""" + NuGetVersion + @""""; @"/p:PackageVersion=""" + NuGetVersion + @""""; @"/p:AssemblyVersion=""" + FileVersion + @""""; @"/p:FileVersion=""" + FileVersion + @""""; @"/p:InformationalVersion=""" + InfoVersion + @"""" ]
 
 printfn "Using version: %s" Version
 
