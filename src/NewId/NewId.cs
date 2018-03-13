@@ -311,6 +311,16 @@ namespace MassTransit
             return !(left == right);
         }
 
+        public static bool operator <(NewId left, NewId right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(NewId left, NewId right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
         public static void SetGenerator(NewIdGenerator generator)
         {
             _generator = generator;
