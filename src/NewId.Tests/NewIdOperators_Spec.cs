@@ -16,7 +16,7 @@
         }
 
         [Test, Explicit]
-        public void Should_be_able_to_determine_greater_id()
+        public void Should_be_able_to_determine_greater_than_id()
         {
             var lowerId = new NewId("fc070000-9565-3668-e000-08d5893343c6");
             var greaterId = new NewId("fc070000-9565-3668-9180-08d589338b38");
@@ -25,7 +25,7 @@
         }
 
         [Test, Explicit]
-        public void Should_be_able_to_determine_lower_id()
+        public void Should_be_able_to_determine_less_than_id()
         {
             var lowerId = new NewId("fc070000-9565-3668-e000-08d5893343c6");
             var greaterId = new NewId("fc070000-9565-3668-9180-08d589338b38");
