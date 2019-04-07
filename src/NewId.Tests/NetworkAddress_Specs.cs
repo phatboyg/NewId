@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+#if NET452
     using System.Management;
+#endif
     using System.Net.NetworkInformation;
     using NewIdProviders;
     using NUnit.Framework;
@@ -11,21 +13,6 @@
     [TestFixture]
     public class When_getting_a_network_address_for_the_id_generator
     {
-        [Test, Explicit]
-        public void Should_match_perhaps()
-        {
-            var networkAddressWorkerIdProvider = new NetworkAddressWorkerIdProvider();
-
-            byte[] firstId = networkAddressWorkerIdProvider.GetWorkerId(0);
-
-            var wmiNetworkAddressWorkerIdProvider = new WmiNetworkAddressWorkerIdProvider();
-
-            byte[] secondId = wmiNetworkAddressWorkerIdProvider.GetWorkerId(2);
-
-
-            Assert.AreEqual(firstId, secondId);
-        }
-
         [Test]
         public void Should_pull_all_adapters()
         {
@@ -48,6 +35,22 @@
 
             Assert.IsNotNull(networkId);
             Assert.AreEqual(6, networkId.Length);
+        }
+
+#if NET452
+        [Test, Explicit]
+        public void Should_match_perhaps()
+        {
+            var networkAddressWorkerIdProvider = new NetworkAddressWorkerIdProvider();
+
+            byte[] firstId = networkAddressWorkerIdProvider.GetWorkerId(0);
+
+            var wmiNetworkAddressWorkerIdProvider = new WmiNetworkAddressWorkerIdProvider();
+
+            byte[] secondId = wmiNetworkAddressWorkerIdProvider.GetWorkerId(2);
+
+
+            Assert.AreEqual(firstId, secondId);
         }
 
         [Test]
@@ -87,6 +90,7 @@
                 }
             }
         }
+#endif
 
         [Test]
         public void Should_pull_using_host_name()
