@@ -3,22 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewId", "NewId\NewId.csproj", "{660D8862-F851-4C9B-A8AB-62A7EEA65614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewId", "NewId\NewId.csproj", "{660D8862-F851-4C9B-A8AB-62A7EEA65614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewId.Tests", "NewId.Tests\NewId.Tests.csproj", "{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A7B21853-82ED-4682-BCE4-9C7366D42FB6}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29D72C40-E8AB-4509-A71A-3AE24BE5D255}"
-	ProjectSection(SolutionItems) = preProject
-		..\build.bat = ..\build.bat
-		..\build.fsx = ..\build.fsx
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewId.Tests", "NewId.Tests\NewId.Tests.csproj", "{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9BD652A7-9C0C-4784-AC00-8CC69969DDC5}
 	EndGlobalSection
 EndGlobal
