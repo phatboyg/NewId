@@ -7,6 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewId", "NewId\NewId.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewId.Tests", "NewId.Tests\NewId.Tests.csproj", "{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cake", "Cake", "{40320C2F-D164-462C-8E57-F91DADC8D440}"
+ProjectSection(SolutionItems) = preProject
+	Directory.Build.props = Directory.Build.props
+	..\appveyor.yml = ..\appveyor.yml
+	..\build.cake = ..\build.cake
+	..\build.ps1 = ..\build.ps1
+	..\build.sh = ..\build.sh
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
