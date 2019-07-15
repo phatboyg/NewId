@@ -382,7 +382,7 @@ namespace MassTransit
         /// <returns></returns>
         public static Guid NextGuid()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next().ToGuid();
+            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).NextGuid();
         }
 
         static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)

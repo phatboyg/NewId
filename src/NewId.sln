@@ -16,6 +16,8 @@ ProjectSection(SolutionItems) = preProject
 	..\build.sh = ..\build.sh
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewId.Benchmarks", "NewId.Benchmarks\NewId.Benchmarks.csproj", "{0753A4DB-8D17-4D51-BC09-1F50D1B5820D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C92C3C4B-5DA0-49C5-A382-E31FD69CDBCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0753A4DB-8D17-4D51-BC09-1F50D1B5820D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0753A4DB-8D17-4D51-BC09-1F50D1B5820D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0753A4DB-8D17-4D51-BC09-1F50D1B5820D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0753A4DB-8D17-4D51-BC09-1F50D1B5820D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
