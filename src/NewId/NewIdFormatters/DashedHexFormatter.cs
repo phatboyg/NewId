@@ -22,7 +22,7 @@
             _alpha = upperCase ? 'A' : 'a';
         }
 
-        public string Format(byte[] bytes)
+        public string Format(in byte[] bytes)
         {
             var result = new char[_length];
 

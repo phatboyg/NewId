@@ -154,5 +154,38 @@
                 Console.WriteLine("{0} {1}", newId.Key, newId.Count());
             }
         }
+
+        [Test, Explicit]
+        public void Should_be_fast_and_friendly()
+        {
+            NewId.Next();
+
+
+            int limit = 1000000;
+
+            var ids = new NewId[limit];
+
+            Parallel.For(0, limit, x => ids[x] = NewId.Next());
+
+            Stopwatch timer = Stopwatch.StartNew();
+
+            Parallel.For(0, limit, x => ids[x] = NewId.Next());
+
+            timer.Stop();
+
+            Console.WriteLine("Generated {0} ids in {1}ms ({2}/ms)", limit, timer.ElapsedMilliseconds,
+                limit / timer.ElapsedMilliseconds);
+
+            Console.WriteLine("Distinct: {0}", ids.Distinct().Count());
+
+            var duplicates = ids.GroupBy(x => x).Where(x => x.Count() > 1).ToArray();
+
+            Console.WriteLine("Duplicates: {0}", duplicates.Count());
+
+            foreach (var newId in duplicates)
+            {
+                Console.WriteLine("{0} {1}", newId.Key, newId.Count());
+            }
+        }
     }
 }

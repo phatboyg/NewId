@@ -6,9 +6,6 @@
     public class DateTimeTickProvider :
         ITickProvider
     {
-        public long Ticks
-        {
-            get { return DateTime.UtcNow.Ticks; }
-        }
+        public long Ticks => DateTime.UtcNow.Ticks;
     }
 }

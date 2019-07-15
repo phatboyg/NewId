@@ -8,7 +8,7 @@ namespace MassTransit.NewIdProviders
         ITickProvider
     {
         readonly Stopwatch _stopwatch;
-        DateTime _start;
+        readonly DateTime _start;
 
         public StopwatchTickProvider()
         {
@@ -16,9 +16,6 @@ namespace MassTransit.NewIdProviders
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public long Ticks
-        {
-            get { return (_start.AddTicks(_stopwatch.Elapsed.Ticks)).Ticks; }
-        }
+        public long Ticks => (_start.AddTicks(_stopwatch.Elapsed.Ticks)).Ticks;
     }
 }

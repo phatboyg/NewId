@@ -1,6 +1,7 @@
 ﻿namespace MassTransit
 {
-    public class NewIdGenerator
+    public class NewIdGenerator :
+        INewIdGenerator
     {
         readonly int _c;
         readonly int _d;
@@ -22,7 +23,7 @@
 
             _c = workerId[0] << 24 | workerId[1] << 16 | workerId[2] << 8 | workerId[3];
 
-            if(processIdProvider != null)
+            if (processIdProvider != null)
             {
                 var processId = processIdProvider.GetProcessId();
                 _d = processId[0] << 24 | processId[1] << 16;
@@ -36,18 +37,23 @@
         public NewId Next()
         {
             long ticks = _tickProvider.Ticks;
+            int a;
+            int b;
+            ushort sequence;
             lock (_sync)
             {
                 if (ticks > _lastTick)
                     UpdateTimestamp(ticks);
-
-                if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
+                else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
                     UpdateTimestamp(_lastTick + 1);
 
-                ushort sequence = _sequence++;
+                sequence = _sequence++;
 
-                return new NewId(_a, _b, _c, _d | sequence);
+                a = _a;
+                b = _b;
             }
+
+            return new NewId(a, b, _c, _d | sequence);
         }
 
         void UpdateTimestamp(long tick)
@@ -55,8 +61,8 @@
             _lastTick = tick;
             _sequence = 0;
 
-            _a = (int)(tick >> 32);
-            _b = (int)(tick & 0xFFFFFFFF);
+            _a = (int) (tick >> 32);
+            _b = (int) (tick & 0xFFFFFFFF);
         }
     }
 }

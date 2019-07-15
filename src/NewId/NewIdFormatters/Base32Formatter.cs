@@ -1,4 +1,6 @@
-﻿namespace MassTransit.NewIdFormatters
+﻿using System.Threading;
+
+namespace MassTransit.NewIdFormatters
 {
     using System;
 
@@ -10,23 +12,24 @@
         const string UpperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
         readonly string _chars;
+        static readonly ThreadLocal<char[]> _formatBuffer = new ThreadLocal<char[]>(() => new char[26]);
 
         public Base32Formatter(bool upperCase = false)
         {
             _chars = upperCase ? UpperCaseChars : LowerCaseChars;
         }
 
-        public Base32Formatter(string chars)
+        public Base32Formatter(in string chars)
         {
             if (chars.Length != 32)
-                throw new ArgumentException("The character string must be exactly 32 characters");
+                throw new ArgumentException("The character string must be exactly 32 characters", nameof(chars));
 
             _chars = chars;
         }
 
-        public string Format(byte[] bytes)
+        public string Format(in byte[] bytes)
         {
-            var result = new char[26];
+            var result = _formatBuffer.Value;
 
             int offset = 0;
             for (int i = 0; i < 3; i++)
@@ -48,11 +51,11 @@
             return new string(result, 0, 26);
         }
 
-        static void ConvertLongToBase32(char[] buffer, int offset, long value, int count, string chars)
+        static void ConvertLongToBase32(in char[] buffer, int offset, long value, int count, string chars)
         {
             for (int i = count - 1; i >= 0; i--)
             {
-                var index = (int)(value % 32);
+                var index = (int) (value % 32);
                 buffer[offset + i] = chars[index];
                 value /= 32;
             }

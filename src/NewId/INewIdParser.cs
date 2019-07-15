@@ -2,6 +2,6 @@
 {
     public interface INewIdParser
     {
-        NewId Parse(string text);
+        NewId Parse(in string text);
     }
 }
