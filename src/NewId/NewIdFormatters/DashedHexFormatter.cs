@@ -72,8 +72,8 @@
 
         static char HexToChar(int value, int alpha)
         {
-            value = value & 0xf;
-            return (char)((value > 9) ? value - 10 + alpha : value + 0x30);
+            value &= 0xf;
+            return (char)(value > 9 ? value - 10 + alpha : value + 0x30);
         }
     }
 }

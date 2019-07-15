@@ -36,7 +36,7 @@ namespace MassTransit.NewIdProviders
             var searcher = new ManagementObjectSearcher(scope, query, options);
             ManagementObjectCollection collection = searcher.Get();
 
-            foreach (ManagementObject obj in collection)
+            foreach (ManagementBaseObject obj in collection)
             {
                 byte[] bytes;
                 try

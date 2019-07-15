@@ -1,8 +1,7 @@
-﻿using System.Threading;
-
-namespace MassTransit.NewIdFormatters
+﻿namespace MassTransit.NewIdFormatters
 {
     using System;
+    using System.Threading;
 
 
     public class Base32Formatter :

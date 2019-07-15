@@ -46,7 +46,7 @@ namespace MassTransit.NewIdParsers
                     if (index < 0)
                         throw new ArgumentException(InvalidInputString);
 
-                    number = number * 32 + (index % 32);
+                    number = number * 32 + index % 32;
                 }
 
                 ConvertLongToBase16(buffer, bufferOffset, number, 5);
@@ -62,7 +62,7 @@ namespace MassTransit.NewIdParsers
                 if (index < 0)
                     throw new ArgumentException(InvalidInputString);
 
-                number = number * 32 + (index % 32);
+                number = number * 32 + index % 32;
             }
 
             ConvertLongToBase16(buffer, bufferOffset, number, 2);

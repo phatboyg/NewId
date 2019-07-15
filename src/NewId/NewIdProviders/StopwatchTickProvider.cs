@@ -16,6 +16,6 @@ namespace MassTransit.NewIdProviders
             _stopwatch = Stopwatch.StartNew();
         }
 
-        public long Ticks => (_start.AddTicks(_stopwatch.Elapsed.Ticks)).Ticks;
+        public long Ticks => _start.AddTicks(_stopwatch.Elapsed.Ticks).Ticks;
     }
 }

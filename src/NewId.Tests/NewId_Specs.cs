@@ -30,6 +30,33 @@
             Assert.LessOrEqual(difference, TimeSpan.FromMinutes(1));
         }
 
+        [Test]
+        public void Should_be_able_to_determine_equal_ids()
+        {
+            var id1 = new NewId("fc070000-9565-3668-e000-08d5893343c6");
+            var id2 = new NewId("fc070000-9565-3668-e000-08d5893343c6");
+
+            Assert.IsTrue(id1 == id2);
+        }
+
+        [Test]
+        public void Should_be_able_to_determine_greater_id()
+        {
+            var lowerId = new NewId("fc070000-9565-3668-e000-08d5893343c6");
+            var greaterId = new NewId("fc070000-9565-3668-9180-08d589338b38");
+
+            Assert.IsTrue(lowerId < greaterId);
+        }
+
+        [Test]
+        public void Should_be_able_to_determine_lower_id()
+        {
+            var lowerId = new NewId("fc070000-9565-3668-e000-08d5893343c6");
+            var greaterId = new NewId("fc070000-9565-3668-9180-08d589338b38");
+
+            Assert.IsFalse(lowerId > greaterId);
+        }
+
         [Test, Explicit]
         public void Should_be_able_to_extract_timestamp_with_process_id()
         {
@@ -103,40 +130,17 @@
 
             int threadCount = 20;
 
-            int workerThreads, complete;
-            ThreadPool.GetMinThreads(out workerThreads, out complete);
-            ThreadPool.SetMinThreads(workerThreads + threadCount, complete);
-
-
             var loopCount = 1024 * 1024;
 
             int limit = loopCount * threadCount;
 
             var ids = new NewId[limit];
 
-            var tasks = new List<Task>();
-
-            var begin = new TaskCompletionSource<bool>();
-
-            for (int threadId = 0; threadId < threadCount; threadId++)
-            {
-                var start = threadId * loopCount;
-                var end = start + loopCount;
-
-                var task = Task.Factory.StartNew(() =>
-                {
-                    //begin.Task.Wait();
-
-                    for (int i = start; i < end; i++)
-                        ids[i] = NewId.Next();
-                });
-
-                tasks.Add(task);
-            }
-
-            //begin.SetResult(true);
-
-            Task.WaitAll(tasks.ToArray());
+            ParallelEnumerable
+                .Range(0, limit)
+                .WithDegreeOfParallelism(8)
+                .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
+                .ForAll(x => { ids[x] = NewId.Next(); });
 
             timer.Stop();
 

@@ -8,7 +8,7 @@ namespace MassTransit
 
 
     /// <summary>
-    /// A NewId is a type that fits into the same space as a Guid/Uuid/uniqueidentifier,
+    /// A NewId is a type that fits into the same space as a Guid/Uuid/unique identifier,
     /// but is guaranteed to be both unique and ordered, assuming it is generated using
     /// a single instance of the generator for each network address used.
     /// </summary>
@@ -94,7 +94,7 @@ namespace MassTransit
         {
             get
             {
-                var ticks = (long) (((ulong) _a) << 32 | (uint) _b);
+                var ticks = (long) ((ulong) _a << 32 | (uint) _b);
 
                 return new DateTime(ticks, DateTimeKind.Utc);
             }
@@ -113,13 +113,13 @@ namespace MassTransit
         public int CompareTo(NewId other)
         {
             if (_a != other._a)
-                return ((uint) _a < (uint) other._a) ? -1 : 1;
+                return (uint) _a < (uint) other._a ? -1 : 1;
             if (_b != other._b)
-                return ((uint) _b < (uint) other._b) ? -1 : 1;
+                return (uint) _b < (uint) other._b ? -1 : 1;
             if (_c != other._c)
-                return ((uint) _c < (uint) other._c) ? -1 : 1;
+                return (uint) _c < (uint) other._c ? -1 : 1;
             if (_d != other._d)
-                return ((uint) _d < (uint) other._d) ? -1 : 1;
+                return (uint) _d < (uint) other._d ? -1 : 1;
 
             return 0;
         }
@@ -168,22 +168,22 @@ namespace MassTransit
         {
             var bytes = _formatterArray.Value;
 
-            bytes[0] = (byte) (_d >> 24);
-            bytes[1] = (byte) (_d >> 16);
-            bytes[2] = (byte) (_d >> 8);
-            bytes[3] = (byte) _d;
-            bytes[4] = (byte) (_c >> 8);
-            bytes[5] = (byte) _c;
-            bytes[6] = (byte) (_c >> 24);
-            bytes[7] = (byte) (_c >> 16);
-            bytes[8] = (byte) (_b >> 8);
-            bytes[9] = (byte) _b;
-            bytes[10] = (byte) (_a >> 24);
-            bytes[11] = (byte) (_a >> 16);
-            bytes[12] = (byte) (_a >> 8);
-            bytes[13] = (byte) _a;
-            bytes[14] = (byte) (_b >> 24);
             bytes[15] = (byte) (_b >> 16);
+            bytes[14] = (byte) (_b >> 24);
+            bytes[13] = (byte) _a;
+            bytes[12] = (byte) (_a >> 8);
+            bytes[11] = (byte) (_a >> 16);
+            bytes[10] = (byte) (_a >> 24);
+            bytes[9] = (byte) _b;
+            bytes[8] = (byte) (_b >> 8);
+            bytes[7] = (byte) (_c >> 16);
+            bytes[6] = (byte) (_c >> 24);
+            bytes[5] = (byte) _c;
+            bytes[4] = (byte) (_c >> 8);
+            bytes[3] = (byte) _d;
+            bytes[2] = (byte) (_d >> 8);
+            bytes[1] = (byte) (_d >> 16);
+            bytes[0] = (byte) (_d >> 24);
 
             return bytes;
         }
@@ -192,22 +192,22 @@ namespace MassTransit
         {
             var bytes = _formatterArray.Value;
 
-            bytes[0] = (byte) (_a >> 24);
-            bytes[1] = (byte) (_a >> 16);
-            bytes[2] = (byte) (_a >> 8);
-            bytes[3] = (byte) _a;
-            bytes[4] = (byte) (_b >> 24);
-            bytes[5] = (byte) (_b >> 16);
-            bytes[6] = (byte) (_b >> 8);
-            bytes[7] = (byte) _b;
-            bytes[8] = (byte) (_c >> 24);
-            bytes[9] = (byte) (_c >> 16);
-            bytes[10] = (byte) (_c >> 8);
-            bytes[11] = (byte) _c;
-            bytes[12] = (byte) (_d >> 24);
-            bytes[13] = (byte) (_d >> 16);
-            bytes[14] = (byte) (_d >> 8);
             bytes[15] = (byte) _d;
+            bytes[14] = (byte) (_d >> 8);
+            bytes[13] = (byte) (_d >> 16);
+            bytes[12] = (byte) (_d >> 24);
+            bytes[11] = (byte) _c;
+            bytes[10] = (byte) (_c >> 8);
+            bytes[9] = (byte) (_c >> 16);
+            bytes[8] = (byte) (_c >> 24);
+            bytes[7] = (byte) _b;
+            bytes[6] = (byte) (_b >> 8);
+            bytes[5] = (byte) (_b >> 16);
+            bytes[4] = (byte) (_b >> 24);
+            bytes[3] = (byte) _a;
+            bytes[2] = (byte) (_a >> 8);
+            bytes[1] = (byte) (_a >> 16);
+            bytes[0] = (byte) (_a >> 24);
 
             return bytes;
         }
@@ -237,11 +237,11 @@ namespace MassTransit
             var d = (byte) (_c >> 24);
             var e = (byte) (_c >> 16);
             var f = (byte) (_c >> 8);
-            var g = (byte) (_c);
+            var g = (byte) _c;
             var h = (byte) (_d >> 24);
             var i = (byte) (_d >> 16);
             var j = (byte) (_d >> 8);
-            var k = (byte) (_d);
+            var k = (byte) _d;
 
             return new Guid(a, b, c, d, e, f, g, h, i, j, k);
         }
@@ -250,22 +250,22 @@ namespace MassTransit
         {
             var bytes = new byte[16];
 
-            bytes[0] = (byte) (_d);
-            bytes[1] = (byte) (_d >> 8);
-            bytes[2] = (byte) (_d >> 16);
-            bytes[3] = (byte) (_d >> 24);
-            bytes[4] = (byte) (_c);
-            bytes[5] = (byte) (_c >> 8);
-            bytes[6] = (byte) (_c >> 16);
-            bytes[7] = (byte) (_c >> 24);
-            bytes[8] = (byte) (_b >> 8);
-            bytes[9] = (byte) (_b);
-            bytes[10] = (byte) (_a >> 24);
-            bytes[11] = (byte) (_a >> 16);
-            bytes[12] = (byte) (_a >> 8);
-            bytes[13] = (byte) (_a);
-            bytes[14] = (byte) (_b >> 24);
             bytes[15] = (byte) (_b >> 16);
+            bytes[14] = (byte) (_b >> 24);
+            bytes[13] = (byte) _a;
+            bytes[12] = (byte) (_a >> 8);
+            bytes[11] = (byte) (_a >> 16);
+            bytes[10] = (byte) (_a >> 24);
+            bytes[9] = (byte) _b;
+            bytes[8] = (byte) (_b >> 8);
+            bytes[7] = (byte) (_c >> 24);
+            bytes[6] = (byte) (_c >> 16);
+            bytes[5] = (byte) (_c >> 8);
+            bytes[4] = (byte) _c;
+            bytes[3] = (byte) (_d >> 24);
+            bytes[2] = (byte) (_d >> 16);
+            bytes[1] = (byte) (_d >> 8);
+            bytes[0] = (byte) _d;
 
             return bytes;
         }
@@ -311,6 +311,16 @@ namespace MassTransit
             return !(left == right);
         }
 
+        public static bool operator <(in NewId left, in NewId right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(in NewId left, in NewId right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
         public static void SetGenerator(INewIdGenerator generator)
         {
             _generator = generator;
@@ -331,11 +341,45 @@ namespace MassTransit
             _tickProvider = provider;
         }
 
+        /// <summary>
+        /// Generate a NewId
+        /// </summary>
+        /// <returns></returns>
         public static NewId Next()
         {
             return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next();
         }
 
+        /// <summary>
+        /// Generate an array of NewIds
+        /// </summary>
+        /// <param name="count">The number of NewIds to generate</param>
+        /// <returns></returns>
+        public static NewId[] Next(int count)
+        {
+            var ids = new NewId[count];
+
+            (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, 0, count);
+
+            return ids;
+        }
+
+        /// <summary>
+        /// Generate an array of NewIds
+        /// </summary>
+        /// <param name="index">The starting offset for the newly generated ids</param>
+        /// <param name="count">The number of NewIds to generate</param>
+        /// <param name="ids">An existing array</param>
+        /// <returns></returns>
+        public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
+        {
+            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, index, count);
+        }
+
+        /// <summary>
+        /// Generate a NewId, and return it as a Guid
+        /// </summary>
+        /// <returns></returns>
         public static Guid NextGuid()
         {
             return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next().ToGuid();
