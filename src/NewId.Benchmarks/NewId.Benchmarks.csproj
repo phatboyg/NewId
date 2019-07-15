@@ -4,6 +4,7 @@
     <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
     <RootNamespace>MassTransit.Benchmarks</RootNamespace>
     <OutputType>Exe</OutputType>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
