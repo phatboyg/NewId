@@ -1,10 +1,10 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 
 namespace MassTransit.Benchmarks
 {
-    [ClrJob(true), CoreJob]
-    [LegacyJitX64Job, RyuJitX64Job]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31)]
     [MemoryDiagnoser, GcServer(true), GcForce]
     public class Benchmarker
     {

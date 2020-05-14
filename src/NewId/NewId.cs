@@ -77,18 +77,11 @@ namespace MassTransit
             _d = a;
         }
 
-        static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ?? (_workerIdProvider = new BestPossibleWorkerIdProvider());
+        static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ??= new BestPossibleWorkerIdProvider();
 
         static IProcessIdProvider ProcessIdProvider => _processIdProvider;
 
-        static ITickProvider TickProvider
-        {
-#if NET452
-            get { return _tickProvider ?? (_tickProvider = new StopwatchTickProvider()); }
-#else
-            get { return _tickProvider ?? (_tickProvider = new DateTimeTickProvider()); }
-#endif
-        }
+        static ITickProvider TickProvider => _tickProvider ??= new DateTimeTickProvider();
 
         public DateTime Timestamp
         {
@@ -347,7 +340,7 @@ namespace MassTransit
         /// <returns></returns>
         public static NewId Next()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next();
+            return (_generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider)).Next();
         }
 
         /// <summary>
@@ -359,7 +352,7 @@ namespace MassTransit
         {
             var ids = new NewId[count];
 
-            (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, 0, count);
+            (_generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider)).Next(ids, 0, count);
 
             return ids;
         }
@@ -373,7 +366,7 @@ namespace MassTransit
         /// <returns></returns>
         public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, index, count);
+            return (_generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider)).Next(ids, index, count);
         }
 
         /// <summary>
@@ -382,7 +375,7 @@ namespace MassTransit
         /// <returns></returns>
         public static Guid NextGuid()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).NextGuid();
+            return (_generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider)).NextGuid();
         }
 
         static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
