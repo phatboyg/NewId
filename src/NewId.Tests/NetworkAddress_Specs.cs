@@ -2,9 +2,6 @@
 {
     using System;
     using System.Linq;
-#if NET452
-    using System.Management;
-#endif
     using System.Net.NetworkInformation;
     using NewIdProviders;
     using NUnit.Framework;
@@ -36,61 +33,6 @@
             Assert.IsNotNull(networkId);
             Assert.AreEqual(6, networkId.Length);
         }
-
-#if NET452
-        [Test, Explicit]
-        public void Should_match_perhaps()
-        {
-            var networkAddressWorkerIdProvider = new NetworkAddressWorkerIdProvider();
-
-            byte[] firstId = networkAddressWorkerIdProvider.GetWorkerId(0);
-
-            var wmiNetworkAddressWorkerIdProvider = new WmiNetworkAddressWorkerIdProvider();
-
-            byte[] secondId = wmiNetworkAddressWorkerIdProvider.GetWorkerId(2);
-
-
-            Assert.AreEqual(firstId, secondId);
-        }
-
-        [Test]
-        public void Should_pull_the_network_from_wmi()
-        {
-            var networkIdProvider = new WmiNetworkAddressWorkerIdProvider();
-
-            byte[] networkId = networkIdProvider.GetWorkerId(0);
-
-            Assert.IsNotNull(networkId);
-            Assert.AreEqual(6, networkId.Length);
-        }
-
-        [Test]
-        public void Should_pull_using_WMI()
-        {
-            var options = new EnumerationOptions {Rewindable = false, ReturnImmediately = true};
-            var scope = new ManagementScope(ManagementPath.DefaultPath);
-            var query = new ObjectQuery("SELECT * FROM Win32_NetworkAdapter");
-
-            var searcher = new ManagementObjectSearcher(scope, query, options);
-            ManagementObjectCollection collection = searcher.Get();
-            foreach (ManagementObject obj in collection)
-            {
-                try
-                {
-                    PropertyData typeData = obj.Properties["AdapterType"];
-                    string typeValue = typeData.Value.ToString();
-
-                    PropertyData propertyData = obj.Properties["MACAddress"];
-                    string propertyValue = propertyData.Value.ToString();
-
-                    Console.WriteLine("Adapter: {0}-{1}", propertyValue, typeValue);
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
-#endif
 
         [Test]
         public void Should_pull_using_host_name()

@@ -82,14 +82,7 @@ namespace MassTransit
 
         static IProcessIdProvider ProcessIdProvider => _processIdProvider;
 
-        static ITickProvider TickProvider
-        {
-#if NET452
-            get { return _tickProvider ?? (_tickProvider = new StopwatchTickProvider()); }
-#else
-            get { return _tickProvider ??= new DateTimeTickProvider(); }
-#endif
-        }
+        static ITickProvider TickProvider => _tickProvider ??= new DateTimeTickProvider();
 
         public DateTime Timestamp
         {

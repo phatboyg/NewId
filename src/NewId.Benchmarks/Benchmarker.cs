@@ -5,9 +5,7 @@ using BenchmarkDotNet.Jobs;
 namespace MassTransit.Benchmarks
 {
     [SimpleJob(RuntimeMoniker.NetCoreApp31)]
-    [MemoryDiagnoser]
-    [GcServer(true)]
-    [GcForce]
+    [MemoryDiagnoser, GcServer(true), GcForce]
     public class Benchmarker
     {
         [Benchmark(Baseline = true, Description = "Next")]
