@@ -23,7 +23,7 @@
         [Test]
         public void Should_convert_to_guid_quickly()
         {
-            NewId n = NewId.Next();
+            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             Guid g = n.ToGuid();
 
@@ -36,7 +36,7 @@
         [Test]
         public void Should_display_sequentially_for_newid()
         {
-            NewId id = NewId.Next();
+            NewId id = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             Console.WriteLine(id.ToString("DS"));
         }
@@ -54,9 +54,21 @@
         }
 
         [Test]
+        public void Should_make_the_round_trip_successfully_via_guid()
+        {
+            Guid g = Guid.NewGuid();
+
+            var n = g.ToNewId();
+
+            var gn = n.ToGuid();
+
+            Assert.AreEqual(g, gn);
+        }
+
+        [Test]
         public void Should_match_string_output_b()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -70,7 +82,7 @@
         [Test]
         public void Should_match_string_output_d()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -84,7 +96,7 @@
         [Test]
         public void Should_match_string_output_n()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -98,7 +110,7 @@
         [Test]
         public void Should_match_string_output_p()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -112,7 +124,7 @@
         [Test]
         public void Should_properly_handle_string_passthrough()
         {
-            NewId n = NewId.Next();
+            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             string ns = n.ToString("D");
 
@@ -126,8 +138,9 @@
         [Test]
         public void Should_support_the_same_constructor()
         {
-            var guid = new Guid(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
-            var newid = new NewId(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+            // ensure all bytes have a different value
+            var guid = new Guid(0x01020304, 0x0506, 0x0708, 9, 10, 11, 12, 13, 14, 15, 16);
+            var newid = new NewId(0x01020304, 0x0506, 0x0708, 9, 10, 11, 12, 13, 14, 15, 16);
 
             Assert.AreEqual(guid.ToString(), newid.ToString());
         }
@@ -135,7 +148,7 @@
         [Test]
         public void Should_work_from_newid_to_guid_to_newid()
         {
-            NewId n = NewId.Next();
+            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             var g = new Guid(n.ToByteArray());
 
