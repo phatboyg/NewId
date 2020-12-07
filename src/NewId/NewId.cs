@@ -341,13 +341,40 @@ namespace MassTransit
             _tickProvider = provider;
         }
 
+        static SpinLock _spinLock = new SpinLock(false);
+
+        public static INewIdGenerator _getGenerator()
+        {
+            // check before lock because this is cheaper than the lock
+            if (_generator is null)
+            {
+                var lockTaken = false;
+                try
+                {
+                    _spinLock.Enter(ref lockTaken);
+
+                    // double check within the lock, because another thread may has created a generator concurrently
+                    if (_generator is null)
+                    {
+                        _generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider);
+                    }
+                }
+                finally
+                {
+                    if (lockTaken)
+                        _spinLock.Exit();
+                }
+            }
+            return _generator;
+        }
+
         /// <summary>
         /// Generate a NewId
         /// </summary>
         /// <returns></returns>
         public static NewId Next()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next();
+            return _getGenerator().Next();
         }
 
         /// <summary>
@@ -359,7 +386,7 @@ namespace MassTransit
         {
             var ids = new NewId[count];
 
-            (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, 0, count);
+            _getGenerator().Next(ids, 0, count);
 
             return ids;
         }
@@ -373,7 +400,7 @@ namespace MassTransit
         /// <returns></returns>
         public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, index, count);
+            return _getGenerator().Next(ids, index, count);
         }
 
         /// <summary>
@@ -382,7 +409,7 @@ namespace MassTransit
         /// <returns></returns>
         public static Guid NextGuid()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).NextGuid();
+            return _getGenerator().NextGuid();
         }
 
         static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
