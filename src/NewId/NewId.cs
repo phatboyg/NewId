@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace MassTransit
@@ -77,7 +78,7 @@ namespace MassTransit
             _d = a;
         }
 
-        static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ?? (_workerIdProvider = new BestPossibleWorkerIdProvider());
+        static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ??= new BestPossibleWorkerIdProvider();
 
         static IProcessIdProvider ProcessIdProvider => _processIdProvider;
 
@@ -86,7 +87,7 @@ namespace MassTransit
 #if NET452
             get { return _tickProvider ?? (_tickProvider = new StopwatchTickProvider()); }
 #else
-            get { return _tickProvider ?? (_tickProvider = new DateTimeTickProvider()); }
+            get { return _tickProvider ??= new DateTimeTickProvider(); }
 #endif
         }
 
@@ -341,13 +342,37 @@ namespace MassTransit
             _tickProvider = provider;
         }
 
+        static SpinLock _spinLock = new SpinLock(false);
+
+        static INewIdGenerator _getGenerator()
+        {
+            if (_generator != null)
+                return _generator;
+
+            var lockTaken = false;
+            try
+            {
+                _spinLock.Enter(ref lockTaken);
+
+                _generator ??= new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider);
+            }
+            finally
+            {
+                if (lockTaken)
+                    _spinLock.Exit();
+            }
+
+            return _generator;
+        }
+
         /// <summary>
         /// Generate a NewId
         /// </summary>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NewId Next()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next();
+            return _getGenerator().Next();
         }
 
         /// <summary>
@@ -355,11 +380,12 @@ namespace MassTransit
         /// </summary>
         /// <param name="count">The number of NewIds to generate</param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NewId[] Next(int count)
         {
             var ids = new NewId[count];
 
-            (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, 0, count);
+            _getGenerator().Next(ids, 0, count);
 
             return ids;
         }
@@ -373,7 +399,7 @@ namespace MassTransit
         /// <returns></returns>
         public static ArraySegment<NewId> Next(NewId[] ids, int index, int count)
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).Next(ids, index, count);
+            return _getGenerator().Next(ids, index, count);
         }
 
         /// <summary>
@@ -382,7 +408,7 @@ namespace MassTransit
         /// <returns></returns>
         public static Guid NextGuid()
         {
-            return (_generator ?? (_generator = new NewIdGenerator(TickProvider, WorkerIdProvider, ProcessIdProvider))).NextGuid();
+            return _getGenerator().NextGuid();
         }
 
         static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
