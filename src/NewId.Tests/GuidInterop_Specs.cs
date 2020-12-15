@@ -56,7 +56,7 @@
         [Test]
         public void Should_match_string_output_b()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -70,7 +70,7 @@
         [Test]
         public void Should_match_string_output_d()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -84,7 +84,7 @@
         [Test]
         public void Should_match_string_output_n()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
@@ -98,7 +98,7 @@
         [Test]
         public void Should_match_string_output_p()
         {
-            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 14, 15};
+            var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 
             var g = new Guid(bytes);
             var n = new NewId(bytes);
