@@ -23,6 +23,23 @@
         }
 
         [Test]
+        public void Should_match_when_all_providers_equal_with_guid_method()
+        {
+            // Arrange
+            var generator1 = new NewIdGenerator(_tickProvider, _workerIdProvider, _processIdProvider);
+            var generator2 = new NewIdGenerator(_tickProvider, _workerIdProvider, _processIdProvider);
+            generator1.Next().ToGuid();
+            generator2.NextGuid();
+
+            // Act
+            var id1 = generator1.Next().ToGuid();
+            var id2 = generator2.NextGuid();
+
+            // Assert
+            Assert.AreEqual(id1, id2);
+        }
+
+        [Test]
         public void Should_not_match_when_generated_from_two_processes()
         {
             // Arrange

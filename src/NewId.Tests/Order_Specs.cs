@@ -56,6 +56,10 @@
             }
         }
 
+        #region ordering using MAC-address is currently not relevant
+
+#if ORDERING_MAC_ADDRESS
+
         [Test]
         public void Should_keep_them_ordered_for_sql_server_when_using_different_mac_addresses()
         {
@@ -92,6 +96,14 @@
             Console.WriteLine("Sql: {0}", right);
         }
 
+#endif
+
+        #endregion
+
+        #region ordering using process id is currently not relevant
+
+#if ORDERING_PROCESS_ID
+
         [Test]
         public void Should_keep_them_ordered_for_sql_server_when_using_different_processes()
         {
@@ -127,6 +139,10 @@
             Console.WriteLine("Sql: {0}", left);
             Console.WriteLine("Sql: {0}", right);
         }
+
+#endif
+
+        #endregion
 
         [SetUp]
         public void Init()

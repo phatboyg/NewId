@@ -75,7 +75,7 @@ namespace MassTransit
             _a = (f << 24) | (g << 16) | (h << 8) | i;
             _b = (j << 24) | (k << 16) | (d << 8) | e;
             _c = (c << 16) | b;
-            _d = a;
+            _d = (int)(a & 0xFFFF0000) | ((a >> 8) & 0x00FF) | ((a << 8) & 0xFF00);
         }
 
         static IWorkerIdProvider WorkerIdProvider => _workerIdProvider ??= new BestPossibleWorkerIdProvider();
@@ -181,8 +181,8 @@ namespace MassTransit
             bytes[6] = (byte) (_c >> 24);
             bytes[5] = (byte) _c;
             bytes[4] = (byte) (_c >> 8);
-            bytes[3] = (byte) _d;
-            bytes[2] = (byte) (_d >> 8);
+            bytes[3] = (byte) (_d >> 8);
+            bytes[2] = (byte) _d;
             bytes[1] = (byte) (_d >> 16);
             bytes[0] = (byte) (_d >> 24);
 
@@ -215,7 +215,7 @@ namespace MassTransit
 
         public Guid ToGuid()
         {
-            int a = _d;
+            int a = (int)(_d & 0xFFFF0000) | ((_d >> 8) & 0x00FF) | ((_d << 8) & 0xFF00);
             var b = (short) _c;
             var c = (short) (_c >> 16);
             var d = (byte) (_b >> 8);
@@ -265,8 +265,8 @@ namespace MassTransit
             bytes[4] = (byte) _c;
             bytes[3] = (byte) (_d >> 24);
             bytes[2] = (byte) (_d >> 16);
-            bytes[1] = (byte) (_d >> 8);
-            bytes[0] = (byte) _d;
+            bytes[1] = (byte) _d;
+            bytes[0] = (byte) (_d >> 8);
 
             return bytes;
         }
@@ -416,7 +416,7 @@ namespace MassTransit
             a = bytes[10] << 24 | bytes[11] << 16 | bytes[12] << 8 | bytes[13];
             b = bytes[14] << 24 | bytes[15] << 16 | bytes[8] << 8 | bytes[9];
             c = bytes[7] << 24 | bytes[6] << 16 | bytes[5] << 8 | bytes[4];
-            d = bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
+            d = bytes[3] << 24 | bytes[2] << 16 | bytes[0] << 8 | bytes[1];
         }
     }
 }

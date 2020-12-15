@@ -113,7 +113,10 @@ namespace MassTransit
             var j = (byte) (b >> 24);
             var k = (byte) (b >> 16);
 
-            return new Guid(_d | sequence, _gb, _gc, d, e, f, g, h, i, j, k);
+            // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+            var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
+
+            return new Guid(_d | sequenceSwapped, _gb, _gc, d, e, f, g, h, i, j, k);
         }
 
         public ArraySegment<NewId> Next(NewId[] ids, int index, int count)
