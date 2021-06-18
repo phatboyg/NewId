@@ -119,6 +119,53 @@ namespace MassTransit
             return new Guid(_d | sequenceSwapped, _gb, _gc, d, e, f, g, h, i, j, k);
         }
 
+        public Guid NextSequentialGuid()
+        {
+            var ticks = _tickProvider.Ticks;
+
+            int a;
+            short b;
+            short c;
+            int sequence;
+
+            var lockTaken = false;
+            try
+            {
+                _spinLock.Enter(ref lockTaken);
+
+                if (ticks > _lastTick)
+                    UpdateTimestamp(ticks);
+                else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
+                    UpdateTimestamp(_lastTick + 1);
+
+                sequence = _sequence++;
+
+                a = _a;
+                b = (short) (_b >> 16);
+                c = (short) _b;
+            }
+            finally
+            {
+                if (lockTaken)
+                    _spinLock.Exit();
+            }
+
+            var d = (byte) (_gc >> 8);
+            var e = (byte) _gc;
+            var f = (byte) (_gb >> 8);
+            var g = (byte) _gb;
+
+            // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
+            var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
+
+            var h = (byte) ((_d | sequenceSwapped) >> 24);
+            var i = (byte) ((_d | sequenceSwapped) >> 16);
+            var j = (byte) ((_d | sequenceSwapped) >> 8);
+            var k = (byte) (_d | sequenceSwapped);
+
+            return new Guid(a, b, c, d, e, f, g, h, i, j, k);
+        }
+
         public ArraySegment<NewId> Next(NewId[] ids, int index, int count)
         {
             long ticks = _tickProvider.Ticks;

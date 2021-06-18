@@ -1,4 +1,6 @@
-﻿namespace MassTransit.NewIdTests
+﻿using System.Linq;
+
+namespace MassTransit.NewIdTests
 {
     using System;
     using System.Diagnostics;
@@ -91,6 +93,30 @@
             NewId nid1 = id1.ToNewId();
             NewId nid2 = id2.ToNewId();
 
+        }
+
+        [Test]
+        public void Should_match_sequentially_with_sequential_guid()
+        {
+            var generator = new NewIdGenerator(_tickProvider, _workerIdProvider);
+
+            var nid = generator.Next();
+            var id1 = nid.ToSequentialGuid();
+            var id2 = generator.NextSequentialGuid();
+            var id3 = generator.NextSequentialGuid();
+
+            Assert.AreNotEqual(id1, id2);
+            Assert.AreNotEqual(id2, id3);
+            Assert.Greater(id2, id1);
+
+            Console.WriteLine(id1);
+            Console.WriteLine(id2);
+            Console.WriteLine(id3);
+
+            NewId nid1 = id1.ToNewIdFromSequential();
+            NewId nid2 = id2.ToNewIdFromSequential();
+
+            Assert.AreEqual(nid, nid1);
         }
 
         [SetUp]

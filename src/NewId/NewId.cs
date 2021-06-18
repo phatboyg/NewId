@@ -247,6 +247,22 @@ namespace MassTransit
             return new Guid(a, b, c, d, e, f, g, h, i, j, k);
         }
 
+        public static NewId FromGuid(in Guid guid)
+        {
+            var bytes = guid.ToByteArray();
+            FromByteArray(bytes, out int a, out int b, out int c, out int d);
+
+            return new NewId(a, b, c, d);
+        }
+
+        public static NewId FromSequentialGuid(in Guid guid)
+        {
+            var bytes = guid.ToByteArray();
+            FromSequentialByteArray(bytes, out int a, out int b, out int c, out int d);
+
+            return new NewId(a, b, c, d);
+        }
+
         public byte[] ToByteArray()
         {
             var bytes = new byte[16];
@@ -411,12 +427,30 @@ namespace MassTransit
             return _getGenerator().NextGuid();
         }
 
+        /// <summary>
+        /// Generate a NewId, and return it as a Guid in sequential format
+        /// </summary>
+        /// <returns></returns>
+        public static Guid NextSequentialGuid()
+        {
+            return _getGenerator().NextSequentialGuid();
+        }
+
+
         static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
         {
             a = bytes[10] << 24 | bytes[11] << 16 | bytes[12] << 8 | bytes[13];
             b = bytes[14] << 24 | bytes[15] << 16 | bytes[8] << 8 | bytes[9];
             c = bytes[7] << 24 | bytes[6] << 16 | bytes[5] << 8 | bytes[4];
             d = bytes[3] << 24 | bytes[2] << 16 | bytes[0] << 8 | bytes[1];
+        }
+
+        static void FromSequentialByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
+        {
+            a = bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
+            b = bytes[5] << 24 | bytes[4] << 16 | bytes[7] << 8 | bytes[6];
+            c = bytes[8] << 24 | bytes[9] << 16 | bytes[10] << 8 | bytes[11];
+            d = bytes[12] << 24 | bytes[13] << 16 | bytes[15] << 8 | bytes[14];
         }
     }
 }
