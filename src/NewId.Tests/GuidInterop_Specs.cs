@@ -158,5 +158,37 @@
 
             Assert.AreEqual(n, ng);
         }
+
+
+        [Test]
+        public void Should_parse_newid_guid_as_newid()
+        {
+            NewId n = NewId.Next();
+
+            var g = n.ToGuid();
+
+            var ng = NewId.FromGuid(g);
+
+            Assert.AreEqual(n, ng);
+
+            // Also checks to see if this would throw
+            Assert.IsTrue(ng.Timestamp != default);
+        }
+
+        [Test]
+        public void Should_parse_sequential_guid_as_newid()
+        {
+            NewId n = NewId.Next();
+
+            var nn = n.ToGuid();
+            var g = n.ToSequentialGuid();
+
+            var ng = NewId.FromSequentialGuid(g);
+
+            Assert.AreEqual(n, ng);
+
+            // Also checks to see if this would throw
+            Assert.IsTrue(ng.Timestamp != default);
+        }
     }
 }

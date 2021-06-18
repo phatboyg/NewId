@@ -28,5 +28,11 @@
         {
             return NewId.NextGuid();
         }
+
+        [Benchmark(Description = "NextSequentialGuid")]
+        public Guid GetNextSequentialGuid()
+        {
+            return NewId.NextSequentialGuid();
+        }
     }
 }
