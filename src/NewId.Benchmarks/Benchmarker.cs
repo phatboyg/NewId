@@ -14,6 +14,9 @@ namespace MassTransit.Benchmarks
             return NewId.Next();
         }
 
+        [Benchmark(Description = "Next(batch)", OperationsPerInvoke = 100)]
+        public NewId[] GetNextBatch() => NewId.Next(100);
+
         [Benchmark(Description = "NextGuid")]
         public Guid GetNextGuid()
         {
