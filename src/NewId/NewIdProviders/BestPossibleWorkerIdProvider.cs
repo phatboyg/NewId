@@ -19,6 +19,7 @@ namespace MassTransit.NewIdProviders
             {
                 exceptions.Add(ex);
             }
+
             try
             {
                 return new HostNameHashWorkerIdProvider().GetWorkerId(index);

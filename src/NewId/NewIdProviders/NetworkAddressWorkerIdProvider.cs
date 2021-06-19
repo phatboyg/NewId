@@ -15,13 +15,13 @@ namespace MassTransit.NewIdProviders
 
         static byte[] GetNetworkAddress(int index)
         {
-            byte[] network = NetworkInterface
+            var network = NetworkInterface
                 .GetAllNetworkInterfaces()
                 .Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Ethernet
-                            || x.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet
-                            || x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
-                            || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetFx
-                            || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetT)
+                    || x.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet
+                    || x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
+                    || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetFx
+                    || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetT)
                 .Select(x => x.GetPhysicalAddress())
                 .Where(x => x != null)
                 .Select(x => x.GetAddressBytes())

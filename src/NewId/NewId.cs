@@ -1,9 +1,8 @@
-using System.Runtime.CompilerServices;
-using System.Threading;
-
 namespace MassTransit
 {
     using System;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
     using NewIdFormatters;
     using NewIdProviders;
 
@@ -31,10 +30,10 @@ namespace MassTransit
         static IWorkerIdProvider _workerIdProvider;
         static IProcessIdProvider _processIdProvider;
 
-        readonly Int32 _a;
-        readonly Int32 _b;
-        readonly Int32 _c;
-        readonly Int32 _d;
+        readonly int _a;
+        readonly int _b;
+        readonly int _c;
+        readonly int _d;
 
         /// <summary>
         /// Creates a NewId using the specified byte array.
@@ -57,7 +56,7 @@ namespace MassTransit
 
             var guid = new Guid(value);
 
-            byte[] bytes = guid.ToByteArray();
+            var bytes = guid.ToByteArray();
 
             FromByteArray(bytes, out _a, out _b, out _c, out _d);
         }
@@ -88,7 +87,7 @@ namespace MassTransit
         {
             get
             {
-                var ticks = (long) ((ulong) _a << 32 | (uint) _b);
+                var ticks = (long)(((ulong)_a << 32) | (uint)_b);
 
                 return new DateTime(ticks, DateTimeKind.Utc);
             }
@@ -101,19 +100,19 @@ namespace MassTransit
             if (!(obj is NewId))
                 throw new ArgumentException("Argument must be a NewId");
 
-            return CompareTo((NewId) obj);
+            return CompareTo((NewId)obj);
         }
 
         public int CompareTo(NewId other)
         {
             if (_a != other._a)
-                return (uint) _a < (uint) other._a ? -1 : 1;
+                return (uint)_a < (uint)other._a ? -1 : 1;
             if (_b != other._b)
-                return (uint) _b < (uint) other._b ? -1 : 1;
+                return (uint)_b < (uint)other._b ? -1 : 1;
             if (_c != other._c)
-                return (uint) _c < (uint) other._c ? -1 : 1;
+                return (uint)_c < (uint)other._c ? -1 : 1;
             if (_d != other._d)
-                return (uint) _d < (uint) other._d ? -1 : 1;
+                return (uint)_d < (uint)other._d ? -1 : 1;
 
             return 0;
         }
@@ -128,14 +127,14 @@ namespace MassTransit
             if (string.IsNullOrEmpty(format))
                 format = "D";
 
-            bool sequential = false;
+            var sequential = false;
             if (format.Length == 2 && (format[1] == 'S' || format[1] == 's'))
                 sequential = true;
             else if (format.Length != 1)
                 throw new FormatException("The format string must be exactly one character or null");
 
-            char formatCh = format[0];
-            byte[] bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
+            var formatCh = format[0];
+            var bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
 
             if (formatCh == 'B' || formatCh == 'b')
                 return BraceFormatter.Format(bytes);
@@ -153,7 +152,7 @@ namespace MassTransit
 
         public string ToString(INewIdFormatter formatter, bool sequential = false)
         {
-            byte[] bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
+            var bytes = sequential ? GetSequentialFormatterArray() : GetFormatterArray();
 
             return formatter.Format(bytes);
         }
@@ -162,22 +161,22 @@ namespace MassTransit
         {
             var bytes = _formatterArray.Value;
 
-            bytes[15] = (byte) (_b >> 16);
-            bytes[14] = (byte) (_b >> 24);
-            bytes[13] = (byte) _a;
-            bytes[12] = (byte) (_a >> 8);
-            bytes[11] = (byte) (_a >> 16);
-            bytes[10] = (byte) (_a >> 24);
-            bytes[9] = (byte) _b;
-            bytes[8] = (byte) (_b >> 8);
-            bytes[7] = (byte) (_c >> 16);
-            bytes[6] = (byte) (_c >> 24);
-            bytes[5] = (byte) _c;
-            bytes[4] = (byte) (_c >> 8);
-            bytes[3] = (byte) (_d >> 8);
-            bytes[2] = (byte) _d;
-            bytes[1] = (byte) (_d >> 16);
-            bytes[0] = (byte) (_d >> 24);
+            bytes[15] = (byte)(_b >> 16);
+            bytes[14] = (byte)(_b >> 24);
+            bytes[13] = (byte)_a;
+            bytes[12] = (byte)(_a >> 8);
+            bytes[11] = (byte)(_a >> 16);
+            bytes[10] = (byte)(_a >> 24);
+            bytes[9] = (byte)_b;
+            bytes[8] = (byte)(_b >> 8);
+            bytes[7] = (byte)(_c >> 16);
+            bytes[6] = (byte)(_c >> 24);
+            bytes[5] = (byte)_c;
+            bytes[4] = (byte)(_c >> 8);
+            bytes[3] = (byte)(_d >> 8);
+            bytes[2] = (byte)_d;
+            bytes[1] = (byte)(_d >> 16);
+            bytes[0] = (byte)(_d >> 24);
 
             return bytes;
         }
@@ -186,56 +185,56 @@ namespace MassTransit
         {
             var bytes = _formatterArray.Value;
 
-            bytes[15] = (byte) _d;
-            bytes[14] = (byte) (_d >> 8);
-            bytes[13] = (byte) (_d >> 16);
-            bytes[12] = (byte) (_d >> 24);
-            bytes[11] = (byte) _c;
-            bytes[10] = (byte) (_c >> 8);
-            bytes[9] = (byte) (_c >> 16);
-            bytes[8] = (byte) (_c >> 24);
-            bytes[7] = (byte) _b;
-            bytes[6] = (byte) (_b >> 8);
-            bytes[5] = (byte) (_b >> 16);
-            bytes[4] = (byte) (_b >> 24);
-            bytes[3] = (byte) _a;
-            bytes[2] = (byte) (_a >> 8);
-            bytes[1] = (byte) (_a >> 16);
-            bytes[0] = (byte) (_a >> 24);
+            bytes[15] = (byte)_d;
+            bytes[14] = (byte)(_d >> 8);
+            bytes[13] = (byte)(_d >> 16);
+            bytes[12] = (byte)(_d >> 24);
+            bytes[11] = (byte)_c;
+            bytes[10] = (byte)(_c >> 8);
+            bytes[9] = (byte)(_c >> 16);
+            bytes[8] = (byte)(_c >> 24);
+            bytes[7] = (byte)_b;
+            bytes[6] = (byte)(_b >> 8);
+            bytes[5] = (byte)(_b >> 16);
+            bytes[4] = (byte)(_b >> 24);
+            bytes[3] = (byte)_a;
+            bytes[2] = (byte)(_a >> 8);
+            bytes[1] = (byte)(_a >> 16);
+            bytes[0] = (byte)(_a >> 24);
 
             return bytes;
         }
 
         public Guid ToGuid()
         {
-            int a = (int)(_d & 0xFFFF0000) | ((_d >> 8) & 0x00FF) | ((_d << 8) & 0xFF00);
-            var b = (short) _c;
-            var c = (short) (_c >> 16);
-            var d = (byte) (_b >> 8);
-            var e = (byte) _b;
-            var f = (byte) (_a >> 24);
-            var g = (byte) (_a >> 16);
-            var h = (byte) (_a >> 8);
-            var i = (byte) _a;
-            var j = (byte) (_b >> 24);
-            var k = (byte) (_b >> 16);
+            var a = (int)(_d & 0xFFFF0000) | ((_d >> 8) & 0x00FF) | ((_d << 8) & 0xFF00);
+            var b = (short)_c;
+            var c = (short)(_c >> 16);
+            var d = (byte)(_b >> 8);
+            var e = (byte)_b;
+            var f = (byte)(_a >> 24);
+            var g = (byte)(_a >> 16);
+            var h = (byte)(_a >> 8);
+            var i = (byte)_a;
+            var j = (byte)(_b >> 24);
+            var k = (byte)(_b >> 16);
 
             return new Guid(a, b, c, d, e, f, g, h, i, j, k);
         }
 
         public Guid ToSequentialGuid()
         {
-            int a = _a;
-            var b = (short) (_b >> 16);
-            var c = (short) _b;
-            var d = (byte) (_c >> 24);
-            var e = (byte) (_c >> 16);
-            var f = (byte) (_c >> 8);
-            var g = (byte) _c;
-            var h = (byte) (_d >> 24);
-            var i = (byte) (_d >> 16);
-            var j = (byte) (_d >> 8);
-            var k = (byte) _d;
+            var a = _a;
+            var b = (short)(_b >> 16);
+            var c = (short)_b;
+            var d = (byte)(_c >> 24);
+            var e = (byte)(_c >> 16);
+            var f = (byte)(_c >> 8);
+            var g = (byte)_c;
+            var h = (byte)(_d >> 24);
+            var i = (byte)(_d >> 16);
+            var j = (byte)(_d >> 8);
+            var k = (byte)_d;
 
             return new Guid(a, b, c, d, e, f, g, h, i, j, k);
         }
@@ -244,22 +243,22 @@ namespace MassTransit
         {
             var bytes = new byte[16];
 
-            bytes[15] = (byte) (_b >> 16);
-            bytes[14] = (byte) (_b >> 24);
-            bytes[13] = (byte) _a;
-            bytes[12] = (byte) (_a >> 8);
-            bytes[11] = (byte) (_a >> 16);
-            bytes[10] = (byte) (_a >> 24);
-            bytes[9] = (byte) _b;
-            bytes[8] = (byte) (_b >> 8);
-            bytes[7] = (byte) (_c >> 24);
-            bytes[6] = (byte) (_c >> 16);
-            bytes[5] = (byte) (_c >> 8);
-            bytes[4] = (byte) _c;
-            bytes[3] = (byte) (_d >> 24);
-            bytes[2] = (byte) (_d >> 16);
-            bytes[1] = (byte) _d;
-            bytes[0] = (byte) (_d >> 8);
+            bytes[15] = (byte)(_b >> 16);
+            bytes[14] = (byte)(_b >> 24);
+            bytes[13] = (byte)_a;
+            bytes[12] = (byte)(_a >> 8);
+            bytes[11] = (byte)(_a >> 16);
+            bytes[10] = (byte)(_a >> 24);
+            bytes[9] = (byte)_b;
+            bytes[8] = (byte)(_b >> 8);
+            bytes[7] = (byte)(_c >> 24);
+            bytes[6] = (byte)(_c >> 16);
+            bytes[5] = (byte)(_c >> 8);
+            bytes[4] = (byte)_c;
+            bytes[3] = (byte)(_d >> 24);
+            bytes[2] = (byte)(_d >> 16);
+            bytes[1] = (byte)_d;
+            bytes[0] = (byte)(_d >> 8);
 
             return bytes;
         }
@@ -280,14 +279,14 @@ namespace MassTransit
                 return false;
             if (obj.GetType() != typeof(NewId))
                 return false;
-            return Equals((NewId) obj);
+            return Equals((NewId)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int result = _a;
+                var result = _a;
                 result = (result * 397) ^ _b;
                 result = (result * 397) ^ _c;
                 result = (result * 397) ^ _d;
@@ -404,12 +403,12 @@ namespace MassTransit
             return _getGenerator().NextGuid();
         }
 
-        static void FromByteArray(in byte[] bytes, out Int32 a, out Int32 b, out Int32 c, out Int32 d)
+        static void FromByteArray(in byte[] bytes, out int a, out int b, out int c, out int d)
         {
-            a = bytes[10] << 24 | bytes[11] << 16 | bytes[12] << 8 | bytes[13];
-            b = bytes[14] << 24 | bytes[15] << 16 | bytes[8] << 8 | bytes[9];
-            c = bytes[7] << 24 | bytes[6] << 16 | bytes[5] << 8 | bytes[4];
-            d = bytes[3] << 24 | bytes[2] << 16 | bytes[0] << 8 | bytes[1];
+            a = (bytes[10] << 24) | (bytes[11] << 16) | (bytes[12] << 8) | bytes[13];
+            b = (bytes[14] << 24) | (bytes[15] << 16) | (bytes[8] << 8) | bytes[9];
+            c = (bytes[7] << 24) | (bytes[6] << 16) | (bytes[5] << 8) | bytes[4];
+            d = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[0] << 8) | bytes[1];
         }
     }
 }

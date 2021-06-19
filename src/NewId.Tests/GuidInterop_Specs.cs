@@ -10,12 +10,12 @@
         [Test]
         public void Should_convert_from_a_guid_quickly()
         {
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
 
-            NewId n = g.ToNewId();
+            var n = g.ToNewId();
 
-            string ns = n.ToString();
-            string gs = g.ToString();
+            var ns = n.ToString();
+            var gs = g.ToString();
 
             Assert.AreEqual(ns, gs);
         }
@@ -23,12 +23,12 @@
         [Test]
         public void Should_convert_to_guid_quickly()
         {
-            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
+            var n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
-            Guid g = n.ToGuid();
+            var g = n.ToGuid();
 
-            string ns = n.ToString();
-            string gs = g.ToString();
+            var ns = n.ToString();
+            var gs = g.ToString();
 
             Assert.AreEqual(ns, gs);
         }
@@ -36,7 +36,7 @@
         [Test]
         public void Should_display_sequentially_for_newid()
         {
-            NewId id = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
+            var id = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             Console.WriteLine(id.ToString("DS"));
         }
@@ -44,7 +44,7 @@
         [Test]
         public void Should_make_the_round_trip_successfully_via_bytes()
         {
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
 
             var n = new NewId(g.ToByteArray());
 
@@ -56,7 +56,7 @@
         [Test]
         public void Should_make_the_round_trip_successfully_via_guid()
         {
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
 
             var n = g.ToNewId();
 
@@ -73,8 +73,8 @@
             var g = new Guid(bytes);
             var n = new NewId(bytes);
 
-            string gs = g.ToString("B");
-            string ns = n.ToString("B");
+            var gs = g.ToString("B");
+            var ns = n.ToString("B");
 
             Assert.AreEqual(gs, ns);
         }
@@ -87,8 +87,8 @@
             var g = new Guid(bytes);
             var n = new NewId(bytes);
 
-            string gs = g.ToString("d");
-            string ns = n.ToString("d");
+            var gs = g.ToString("d");
+            var ns = n.ToString("d");
 
             Assert.AreEqual(gs, ns);
         }
@@ -101,8 +101,8 @@
             var g = new Guid(bytes);
             var n = new NewId(bytes);
 
-            string gs = g.ToString("N");
-            string ns = n.ToString("N");
+            var gs = g.ToString("N");
+            var ns = n.ToString("N");
 
             Assert.AreEqual(gs, ns);
         }
@@ -115,8 +115,8 @@
             var g = new Guid(bytes);
             var n = new NewId(bytes);
 
-            string gs = g.ToString("P");
-            string ns = n.ToString("P");
+            var gs = g.ToString("P");
+            var ns = n.ToString("P");
 
             Assert.AreEqual(gs, ns);
         }
@@ -124,9 +124,9 @@
         [Test]
         public void Should_properly_handle_string_passthrough()
         {
-            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
+            var n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
-            string ns = n.ToString("D");
+            var ns = n.ToString("D");
 
             var g = new Guid(ns);
 
@@ -148,7 +148,7 @@
         [Test]
         public void Should_work_from_newid_to_guid_to_newid()
         {
-            NewId n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
+            var n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
 
             var g = new Guid(n.ToByteArray());
 

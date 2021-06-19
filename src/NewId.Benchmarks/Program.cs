@@ -1,7 +1,8 @@
-using BenchmarkDotNet.Running;
-
 namespace MassTransit.Benchmarks
 {
+    using BenchmarkDotNet.Running;
+
+
     public class Program
     {
         public static void Main(string[] args)

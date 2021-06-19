@@ -14,10 +14,10 @@
         {
             var result = new char[32];
 
-            int offset = 0;
-            for (int i = 0; i < 16; i++)
+            var offset = 0;
+            for (var i = 0; i < 16; i++)
             {
-                byte value = bytes[i];
+                var value = bytes[i];
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }

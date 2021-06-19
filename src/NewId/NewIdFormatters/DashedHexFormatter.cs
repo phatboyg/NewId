@@ -26,8 +26,8 @@
         {
             var result = new char[_length];
 
-            int i = 0;
-            int offset = 0;
+            var i = 0;
+            var offset = 0;
             if (_prefix != '\0')
                 result[offset++] = _prefix;
             for (; i < 4; i++)
@@ -36,6 +36,7 @@
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }
+
             result[offset++] = '-';
             for (; i < 6; i++)
             {
@@ -43,6 +44,7 @@
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }
+
             result[offset++] = '-';
             for (; i < 8; i++)
             {
@@ -50,6 +52,7 @@
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }
+
             result[offset++] = '-';
             for (; i < 10; i++)
             {
@@ -57,6 +60,7 @@
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }
+
             result[offset++] = '-';
             for (; i < 16; i++)
             {
@@ -64,6 +68,7 @@
                 result[offset++] = HexToChar(value >> 4, _alpha);
                 result[offset++] = HexToChar(value, _alpha);
             }
+
             if (_suffix != '\0')
                 result[offset] = _suffix;
 

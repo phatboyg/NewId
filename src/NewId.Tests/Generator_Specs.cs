@@ -4,9 +4,31 @@
     using System.Diagnostics;
     using NUnit.Framework;
 
+
     [TestFixture]
     public class When_generating_id
     {
+        [Test]
+        public void Should_match_sequentially()
+        {
+            var generator = new NewIdGenerator(_tickProvider, _workerIdProvider);
+
+            var id1 = generator.Next().ToGuid();
+            var id2 = generator.NextGuid();
+            var id3 = generator.NextGuid();
+
+            Assert.AreNotEqual(id1, id2);
+            Assert.AreNotEqual(id2, id3);
+            Assert.Greater(id2, id1);
+
+            Console.WriteLine(id1);
+            Console.WriteLine(id2);
+            Console.WriteLine(id3);
+
+            var nid1 = id1.ToNewId();
+            var nid2 = id2.ToNewId();
+        }
+
         [Test]
         public void Should_match_when_all_providers_equal()
         {
@@ -71,28 +93,6 @@
             Assert.AreNotEqual(id1, id2);
         }
 
-        [Test]
-        public void Should_match_sequentially()
-        {
-            var generator = new NewIdGenerator(_tickProvider, _workerIdProvider);
-
-            var id1 = generator.Next().ToGuid();
-            var id2 = generator.NextGuid();
-            var id3 = generator.NextGuid();
-
-            Assert.AreNotEqual(id1, id2);
-            Assert.AreNotEqual(id2, id3);
-            Assert.Greater(id2, id1);
-
-            Console.WriteLine(id1);
-            Console.WriteLine(id2);
-            Console.WriteLine(id3);
-
-            NewId nid1 = id1.ToNewId();
-            NewId nid2 = id2.ToNewId();
-
-        }
-
         [SetUp]
         public void Init()
         {
@@ -115,6 +115,7 @@
             return _start.AddTicks(_stopwatch.Elapsed.Ticks).Ticks;
         }
 
+
         class MockTickProvider :
             ITickProvider
         {
@@ -125,6 +126,7 @@
 
             public long Ticks { get; }
         }
+
 
         class MockNetworkProvider :
             IWorkerIdProvider
@@ -141,6 +143,7 @@
                 return _workerId;
             }
         }
+
 
         class MockProcessIdProvider :
             IProcessIdProvider

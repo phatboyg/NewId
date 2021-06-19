@@ -42,12 +42,12 @@
         [Test]
         public void Should_work_from_guid_to_newid_to_guid()
         {
-            Guid g = Guid.NewGuid();
+            var g = Guid.NewGuid();
 
             var n = new NewId(g.ToByteArray());
 
-            string gs = g.ToString("d");
-            string ns = n.ToString("d");
+            var gs = g.ToString("d");
+            var ns = n.ToString("d");
 
             Assert.AreEqual(gs, ns);
         }

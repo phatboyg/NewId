@@ -16,7 +16,7 @@
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces()
                 .ToArray();
 
-            foreach (NetworkInterface networkInterface in interfaces)
+            foreach (var networkInterface in interfaces)
             {
                 Console.WriteLine("Network Interface: {0} - {1}", networkInterface.Description,
                     networkInterface.NetworkInterfaceType);
@@ -28,7 +28,7 @@
         {
             var networkIdProvider = new NetworkAddressWorkerIdProvider();
 
-            byte[] networkId = networkIdProvider.GetWorkerId(0);
+            var networkId = networkIdProvider.GetWorkerId(0);
 
             Assert.IsNotNull(networkId);
             Assert.AreEqual(6, networkId.Length);
@@ -39,7 +39,7 @@
         {
             var networkIdProvider = new HostNameHashWorkerIdProvider();
 
-            byte[] networkId = networkIdProvider.GetWorkerId(0);
+            var networkId = networkIdProvider.GetWorkerId(0);
 
             Assert.IsNotNull(networkId);
             Assert.AreEqual(6, networkId.Length);
@@ -50,13 +50,13 @@
         {
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces()
                 .Where(x => x.NetworkInterfaceType == NetworkInterfaceType.Ethernet
-                            || x.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet
-                            || x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
-                            || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetFx
-                            || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetT
+                    || x.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet
+                    || x.NetworkInterfaceType == NetworkInterfaceType.Wireless80211
+                    || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetFx
+                    || x.NetworkInterfaceType == NetworkInterfaceType.FastEthernetT
                 ).ToArray();
 
-            foreach (NetworkInterface networkInterface in interfaces)
+            foreach (var networkInterface in interfaces)
                 Console.WriteLine("Network Interface: {0}", networkInterface.Description);
         }
     }

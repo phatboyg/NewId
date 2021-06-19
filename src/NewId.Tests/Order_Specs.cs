@@ -3,7 +3,6 @@
     using System;
     using System.Data.SqlTypes;
     using System.Diagnostics;
-    using NewIdProviders;
     using NUnit.Framework;
 
 
@@ -16,12 +15,12 @@
             var generator = new NewIdGenerator(_tickProvider, _workerIdProvider);
             generator.Next();
 
-            int limit = 1024;
+            var limit = 1024;
 
             var ids = new NewId[limit];
             generator.Next(ids, 0, limit);
 
-            for (int i = 0; i < limit - 1; i++)
+            for (var i = 0; i < limit - 1; i++)
             {
                 Assert.AreNotEqual(ids[i], ids[i + 1]);
 
@@ -39,27 +38,26 @@
             var generator = new NewIdGenerator(_tickProvider, _workerIdProvider);
             generator.Next();
 
-            int limit = 1024;
+            var limit = 1024;
 
             var ids = new NewId[limit];
             generator.Next(ids, 0, limit);
 
-            for (int i = 0; i < limit - 1; i++)
+            for (var i = 0; i < limit - 1; i++)
             {
                 Assert.AreNotEqual(ids[i], ids[i + 1]);
 
-                Guid left = ids[i].ToSequentialGuid();
-                Guid right = ids[i + 1].ToSequentialGuid();
+                var left = ids[i].ToSequentialGuid();
+                var right = ids[i + 1].ToSequentialGuid();
                 Assert.Less(left, right);
                 if (i % 128 == 0)
                     Console.WriteLine("Sql: {0}", left);
             }
         }
 
-        #region ordering using MAC-address is currently not relevant
+    #region ordering using MAC-address is currently not relevant
 
-#if ORDERING_MAC_ADDRESS
-
+    #if ORDERING_MAC_ADDRESS
         [Test]
         public void Should_keep_them_ordered_for_sql_server_when_using_different_mac_addresses()
         {
@@ -96,14 +94,13 @@
             Console.WriteLine("Sql: {0}", right);
         }
 
-#endif
+    #endif
 
-        #endregion
+    #endregion
 
-        #region ordering using process id is currently not relevant
+    #region ordering using process id is currently not relevant
 
-#if ORDERING_PROCESS_ID
-
+    #if ORDERING_PROCESS_ID
         [Test]
         public void Should_keep_them_ordered_for_sql_server_when_using_different_processes()
         {
@@ -140,9 +137,9 @@
             Console.WriteLine("Sql: {0}", right);
         }
 
-#endif
+    #endif
 
-        #endregion
+    #endregion
 
         [SetUp]
         public void Init()
@@ -164,6 +161,7 @@
             return _start.AddTicks(_stopwatch.Elapsed.Ticks).Ticks;
         }
 
+
         class MockTickProvider :
             ITickProvider
         {
@@ -174,6 +172,7 @@
 
             public long Ticks { get; }
         }
+
 
         class MockNetworkProvider :
             IWorkerIdProvider
@@ -190,6 +189,7 @@
                 return _workerId;
             }
         }
+
 
         class MockProcessIdProvider :
             IProcessIdProvider

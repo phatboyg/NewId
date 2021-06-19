@@ -1,8 +1,8 @@
-﻿using System;
-
-namespace MassTransit
+﻿namespace MassTransit
 {
+    using System;
     using System.Threading;
+
 
     public class NewIdGenerator :
         INewIdGenerator
@@ -35,42 +35,31 @@ namespace MassTransit
                 _d = (processId[0] << 24) | (processId[1] << 16);
             }
             else
-            {
                 _d = (workerId[4] << 24) | (workerId[5] << 16);
-            }
 
-            _gb = (short) _c;
-            _gc = (short) (_c >> 16);
+            _gb = (short)_c;
+            _gc = (short)(_c >> 16);
         }
 
         public NewId Next()
         {
             var ticks = _tickProvider.Ticks;
 
-            int a;
-            int b;
-            int sequence;
-
             var lockTaken = false;
-            try
-            {
-                _spinLock.Enter(ref lockTaken);
+            _spinLock.Enter(ref lockTaken);
 
-                if (ticks > _lastTick)
-                    UpdateTimestamp(ticks);
-                else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
-                    UpdateTimestamp(_lastTick + 1);
+            if (ticks > _lastTick)
+                UpdateTimestamp(ticks);
+            else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
+                UpdateTimestamp(_lastTick + 1);
 
-                sequence = _sequence++;
+            var sequence = _sequence++;
 
-                a = _a;
-                b = _b;
-            }
-            finally
-            {
-                if (lockTaken)
-                    _spinLock.Exit();
-            }
+            var a = _a;
+            var b = _b;
+
+            if (lockTaken)
+                _spinLock.Exit();
 
             return new NewId(a, b, _c, _d | sequence);
         }
@@ -79,39 +68,30 @@ namespace MassTransit
         {
             var ticks = _tickProvider.Ticks;
 
-            int a;
-            int b;
-            int sequence;
-
             var lockTaken = false;
-            try
-            {
-                _spinLock.Enter(ref lockTaken);
+            _spinLock.Enter(ref lockTaken);
 
-                if (ticks > _lastTick)
-                    UpdateTimestamp(ticks);
-                else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
-                    UpdateTimestamp(_lastTick + 1);
+            if (ticks > _lastTick)
+                UpdateTimestamp(ticks);
+            else if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
+                UpdateTimestamp(_lastTick + 1);
 
-                sequence = _sequence++;
+            var sequence = _sequence++;
 
-                a = _a;
-                b = _b;
-            }
-            finally
-            {
-                if (lockTaken)
-                    _spinLock.Exit();
-            }
+            var a = _a;
+            var b = _b;
 
-            var d = (byte) (b >> 8);
-            var e = (byte) b;
-            var f = (byte) (a >> 24);
-            var g = (byte) (a >> 16);
-            var h = (byte) (a >> 8);
-            var i = (byte) a;
-            var j = (byte) (b >> 24);
-            var k = (byte) (b >> 16);
+            if (lockTaken)
+                _spinLock.Exit();
+
+            var d = (byte)(b >> 8);
+            var e = (byte)b;
+            var f = (byte)(a >> 24);
+            var g = (byte)(a >> 16);
+            var h = (byte)(a >> 8);
+            var i = (byte)a;
+            var j = (byte)(b >> 24);
+            var k = (byte)(b >> 16);
 
             // swapping high and low byte, because SQL-server is doing the wrong ordering otherwise
             var sequenceSwapped = ((sequence << 8) | ((sequence >> 8) & 0x00FF)) & 0xFFFF;
@@ -121,38 +101,36 @@ namespace MassTransit
 
         public ArraySegment<NewId> Next(NewId[] ids, int index, int count)
         {
-            long ticks = _tickProvider.Ticks;
+            if (index + count > ids.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            var ticks = _tickProvider.Ticks;
+
             var lockTaken = false;
-            try
+            _spinLock.Enter(ref lockTaken);
+
+            if (ticks > _lastTick)
+                UpdateTimestamp(ticks);
+
+            var limit = index + count;
+            for (var i = index; i < limit; i++)
             {
-                _spinLock.Enter(ref lockTaken);
+                if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
+                    UpdateTimestamp(_lastTick + 1);
 
-                if (ticks > _lastTick)
-                    UpdateTimestamp(ticks);
-
-                int limit = index + count;
-                for (int i = index; i < limit; i++)
-                {
-                    if (_sequence == 65535) // we are about to rollover, so we need to increment ticks
-                        UpdateTimestamp(_lastTick + 1);
-
-                    ids[i] = new NewId(_a, _b, _c, _d | _sequence++);
-                }
+                ids[i] = new NewId(_a, _b, _c, _d | _sequence++);
             }
-            finally
-            {
-                if (lockTaken)
-                    _spinLock.Exit();
-            }
+
+            if (lockTaken)
+                _spinLock.Exit();
 
             return new ArraySegment<NewId>(ids, index, count);
         }
 
-
         void UpdateTimestamp(long tick)
         {
-            _b = (int) (tick & 0xFFFFFFFF);
-            _a = (int) (tick >> 32);
+            _b = (int)(tick & 0xFFFFFFFF);
+            _a = (int)(tick >> 32);
 
             _sequence = 0;
             _lastTick = tick;

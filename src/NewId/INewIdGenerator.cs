@@ -2,6 +2,7 @@ namespace MassTransit
 {
     using System;
 
+
     public interface INewIdGenerator
     {
         NewId Next();

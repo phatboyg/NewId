@@ -15,13 +15,13 @@
             var generator = new NewIdGenerator(new TimeLapseTickProvider(), new NetworkAddressWorkerIdProvider());
             generator.Next();
 
-            int limit = 1024;
+            var limit = 1024;
 
             var ids = new NewId[limit];
-            for (int i = 0; i < limit; i++)
+            for (var i = 0; i < limit; i++)
                 ids[i] = generator.Next();
 
-            for (int i = 0; i < limit - 1; i++)
+            for (var i = 0; i < limit - 1; i++)
             {
                 Assert.AreNotEqual(ids[i], ids[i + 1]);
 

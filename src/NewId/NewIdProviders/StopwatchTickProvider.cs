@@ -7,8 +7,8 @@ namespace MassTransit.NewIdProviders
     public class StopwatchTickProvider :
         ITickProvider
     {
-        readonly Stopwatch _stopwatch;
         readonly DateTime _start;
+        readonly Stopwatch _stopwatch;
 
         public StopwatchTickProvider()
         {

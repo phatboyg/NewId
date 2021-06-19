@@ -1,8 +1,8 @@
-﻿using System.Threading;
-
-namespace MassTransit.NewIdParsers
+﻿namespace MassTransit.NewIdParsers
 {
     using System;
+    using System.Threading;
+
 
     public class Base32Parser :
         INewIdParser
@@ -14,7 +14,8 @@ namespace MassTransit.NewIdParsers
         static readonly ThreadLocal<char[]> _buffer = new ThreadLocal<char[]>(() => new char[32]);
         readonly string _chars;
 
-        public Base32Parser() :
+        public Base32Parser()
+            :
             this(ConvertChars)
         {
         }
@@ -34,15 +35,15 @@ namespace MassTransit.NewIdParsers
 
             var buffer = _buffer.Value;
 
-            int bufferOffset = 0;
-            int offset = 0;
+            var bufferOffset = 0;
+            var offset = 0;
             long number;
-            for (int i = 0; i < 6; ++i)
+            for (var i = 0; i < 6; ++i)
             {
                 number = 0;
-                for (int j = 0; j < 4; j++)
+                for (var j = 0; j < 4; j++)
                 {
-                    int index = _chars.IndexOf(text[offset + j]);
+                    var index = _chars.IndexOf(text[offset + j]);
                     if (index < 0)
                         throw new ArgumentException(InvalidInputString);
 
@@ -56,9 +57,9 @@ namespace MassTransit.NewIdParsers
             }
 
             number = 0;
-            for (int j = 0; j < 2; j++)
+            for (var j = 0; j < 2; j++)
             {
-                int index = _chars.IndexOf(text[offset + j]);
+                var index = _chars.IndexOf(text[offset + j]);
                 if (index < 0)
                     throw new ArgumentException(InvalidInputString);
 
@@ -72,9 +73,9 @@ namespace MassTransit.NewIdParsers
 
         static void ConvertLongToBase16(in char[] buffer, int offset, long value, int count)
         {
-            for (int i = count - 1; i >= 0; i--)
+            for (var i = count - 1; i >= 0; i--)
             {
-                var index = (int) (value % 16);
+                var index = (int)(value % 16);
                 buffer[offset + i] = HexChars[index];
                 value /= 16;
             }

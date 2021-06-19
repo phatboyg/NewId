@@ -18,10 +18,10 @@ namespace MassTransit.NewIdProviders
         {
             try
             {
-                string hostName = Dns.GetHostName();
+                var hostName = Dns.GetHostName();
 
                 byte[] hash;
-                using (SHA1 hasher = SHA1.Create())
+                using (var hasher = SHA1.Create())
                 {
                     hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(hostName));
                 }

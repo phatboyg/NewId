@@ -1,42 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using MassTransit.NewIdFormatters;
-using MassTransit.NewIdParsers;
-using NUnit.Framework;
-
-namespace MassTransit.NewIdTests
+﻿namespace MassTransit.NewIdTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using NewIdFormatters;
+    using NewIdParsers;
+    using NUnit.Framework;
+
+
     [TestFixture]
     public class Using_the_newid_formatters
     {
         [Test]
         public void Should_compare_known_conversions()
         {
-            string directory = AppDomain.CurrentDomain.BaseDirectory;
-            string newIdFileName = Path.Combine(directory, "guids.txt");
-            string textsFileName = Path.Combine(directory, "texts.txt");
+            var directory = AppDomain.CurrentDomain.BaseDirectory;
+            var newIdFileName = Path.Combine(directory, "guids.txt");
+            var textsFileName = Path.Combine(directory, "texts.txt");
 
             var newIds = new List<NewId>();
 
-            using (FileStream file = File.Open(newIdFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var file = File.Open(newIdFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new StreamReader(file))
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
                     newIds.Add(new NewId(line.Trim()));
                 }
             }
 
             var texts = new List<string>(newIds.Count);
 
-            using (FileStream file = File.Open(textsFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var file = File.Open(textsFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new StreamReader(file))
             {
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
                     texts.Add(line.Trim());
                 }
             }
@@ -45,9 +46,9 @@ namespace MassTransit.NewIdTests
 
             var formatter = new Base32Formatter("0123456789ABCDEFGHIJKLMNOPQRSTUV");
 
-            for (int i = 0; i < newIds.Count; i++)
+            for (var i = 0; i < newIds.Count; i++)
             {
-                string text = newIds[i].ToString(formatter);
+                var text = newIds[i].ToString(formatter);
 
                 Assert.AreEqual(texts[i], text);
             }
@@ -62,10 +63,10 @@ namespace MassTransit.NewIdTests
 
             var formatter = new ZBase32Formatter(true);
 
-            string ns = n.ToString(formatter);
+            var ns = n.ToString(formatter);
 
             var parser = new ZBase32Parser();
-            NewId newId = parser.Parse(ns);
+            var newId = parser.Parse(ns);
 
 
             Assert.AreEqual(n, newId);
@@ -78,10 +79,10 @@ namespace MassTransit.NewIdTests
 
             var formatter = new Base32Formatter(true);
 
-            string ns = n.ToString(formatter);
+            var ns = n.ToString(formatter);
 
             var parser = new Base32Parser();
-            NewId newId = parser.Parse(ns);
+            var newId = parser.Parse(ns);
 
 
             Assert.AreEqual(n, newId);
@@ -94,7 +95,7 @@ namespace MassTransit.NewIdTests
 
             var formatter = new Base32Formatter("0123456789ABCDEFGHIJKLMNOPQRSTUV");
 
-            string ns = n.ToString(formatter);
+            var ns = n.ToString(formatter);
 
             Assert.AreEqual("UQP7OV4AN129HB4N79GGF8GJ10", ns);
         }
@@ -106,7 +107,7 @@ namespace MassTransit.NewIdTests
 
             var formatter = new Base32Formatter(true);
 
-            string ns = n.ToString(formatter);
+            var ns = n.ToString(formatter);
 
             Assert.AreEqual("62ZHY7EKXBCJRLEXHJQQPIQTBA", ns);
         }
@@ -118,7 +119,7 @@ namespace MassTransit.NewIdTests
 
             var formatter = new ZBase32Formatter(true);
 
-            string ns = n.ToString(formatter);
+            var ns = n.ToString(formatter);
 
             Assert.AreEqual("6438A9RKZBNJTMRZ8JOOXEOUBY", ns);
         }
@@ -128,10 +129,10 @@ namespace MassTransit.NewIdTests
         {
             var n = new NewId("F6B27C7C-8AB8-4498-AC97-3A6107A21320");
 
-            string ns = "6438A9RK2BNJTMRZ8J0OXE0UBY";
+            var ns = "6438A9RK2BNJTMRZ8J0OXE0UBY";
 
             var parser = new ZBase32Parser(true);
-            NewId newId = parser.Parse(ns);
+            var newId = parser.Parse(ns);
 
 
             Assert.AreEqual(n, newId);
