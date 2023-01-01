@@ -75,7 +75,12 @@ Task("Test")
 
     if(data.IsRunningOnAppVeyor) settings.ArgumentCustomization = args => args.Append($"--test-adapter-path:.").Append("--logger:Appveyor");
 
+    Information($"Running {project.GetFilename()} test with SSE3 enabled");
     DotNetCoreTest(data.Paths.Directories.Solution.FullPath, settings);
+
+    settings.EnvironmentVariables["COMPlus_EnableSSE3"] = "0";
+    Information($"Running {project.GetFilename()} test with SSE3 disabled");
+    DotNetTest(data.Paths.Directories.Solution.FullPath, settings);
 });
 
 Task("Pack")
