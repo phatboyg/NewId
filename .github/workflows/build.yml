@@ -64,7 +64,7 @@ jobs:
   publish:
     name: Build and Publish NuGets
     runs-on: ubuntu-latest
-    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'MassTransit/NewId' && success()
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.repository == 'phatboyg/NewId' && success()
     needs:
       - calc-version
     steps:
