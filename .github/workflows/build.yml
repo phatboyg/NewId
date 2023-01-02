@@ -31,11 +31,6 @@ jobs:
       - name: Install .NET Core SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v1
-        with:
           dotnet-version: '6.0.x'
 
       - name: Restore NuGet packages
@@ -86,12 +81,10 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Build and Publish NewId
-        # was: brandedoutcast/publish-nuget@v2.5.5
         uses: drusellers/publish-nuget@master
         with:
           project-file-path: src/NewId/NewId.csproj
           version: ${{ needs.calc-version.outputs.version }}
           tag-commit: false
           nuget-key: ${{secrets.NUGET_API_KEY}}
-          include-symbols: true
 
