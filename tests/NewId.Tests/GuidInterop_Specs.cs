@@ -66,6 +66,18 @@
         }
 
         [Test]
+        public void Should_make_the_round_trip_successfully_via_sequential_guid()
+        {
+            var g = Guid.NewGuid();
+
+            var n = g.ToNewIdFromSequential();
+
+            var gn = n.ToSequentialGuid();
+
+            Assert.AreEqual(g, gn);
+        }
+
+        [Test]
         public void Should_match_string_output_b()
         {
             var bytes = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -122,6 +134,67 @@
         }
 
         [Test]
+        public void Should_match_parsed_guid_bs()
+        {
+            var bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+            var n = new NewId(bytes);
+
+            var ns = n.ToString("Bs");
+
+            var gsn = Guid.Parse(ns);
+            var g = n.ToSequentialGuid();
+
+            Assert.AreEqual(g, gsn);
+        }
+
+        [Test]
+        public void Should_match_parsed_guid_ds()
+        {
+            var bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+            var n = new NewId(bytes);
+
+            var ns = n.ToString("Ds");
+
+            var gsn = Guid.Parse(ns);
+            var g = n.ToSequentialGuid();
+
+            Assert.AreEqual(g, gsn);
+            Assert.AreNotEqual(gsn, n.ToGuid());
+        }
+
+        [Test]
+        public void Should_match_parsed_guid_ns()
+        {
+            var bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+            var n = new NewId(bytes);
+
+            var ns = n.ToString("Ns");
+
+            var gsn = Guid.Parse(ns);
+            var g = n.ToSequentialGuid();
+
+            Assert.AreEqual(g, gsn);
+        }
+
+        [Test]
+        public void Should_match_parsed_guid_ps()
+        {
+            var bytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+
+            var n = new NewId(bytes);
+
+            var ns = n.ToString("Ps");
+
+            var gsn = Guid.Parse(ns);
+            var g = n.ToSequentialGuid();
+
+            Assert.AreEqual(g, gsn);
+        }
+
+        [Test]
         public void Should_properly_handle_string_passthrough()
         {
             var n = NewId.Next(2)[1]; // ensure sequence number is not 0x0000
@@ -163,7 +236,7 @@
         [Test]
         public void Should_parse_newid_guid_as_newid()
         {
-            NewId n = NewId.Next();
+            NewId n = NewId.Next(2)[1];
 
             var g = n.ToGuid();
 
@@ -178,7 +251,7 @@
         [Test]
         public void Should_parse_sequential_guid_as_newid()
         {
-            NewId n = NewId.Next();
+            NewId n = NewId.Next(2)[1];
 
             var nn = n.ToGuid();
             var g = n.ToSequentialGuid();
