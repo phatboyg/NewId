@@ -11,8 +11,9 @@ namespace MassTransit
     using System.Runtime.Intrinsics;
     using System.Runtime.InteropServices;
     using System.Diagnostics;
-    using System.Buffers.Binary;
 #endif
+
+
     /// <summary>
     /// A NewId is a type that fits into the same space as a Guid/Uuid/unique identifier,
     /// but is guaranteed to be both unique and ordered, assuming it is generated using
@@ -369,7 +370,7 @@ namespace MassTransit
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
                 return false;
             if (obj.GetType() != typeof(NewId))
                 return false;
