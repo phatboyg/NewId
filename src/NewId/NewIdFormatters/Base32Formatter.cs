@@ -16,9 +16,9 @@
         const string UpperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
         readonly string _chars;
-        readonly bool _isCustom;
         readonly bool _isUpperCase;
 #if NET6_0_OR_GREATER
+        readonly bool _isCustom;
         readonly Vector256<byte> _lower;
         readonly Vector256<byte> _upper;
 #endif
