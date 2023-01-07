@@ -12,9 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="guids.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="texts.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

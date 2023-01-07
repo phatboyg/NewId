@@ -128,13 +128,12 @@
             var spanBytes = MemoryMarshal.Cast<char, byte>(charSpan);
             IntrinsicsHelper.Vector256ToCharUtf16(a2, spanBytes);
 
-            spanBytes[32] = hexVec.GetElement(14);
-            spanBytes[34] = hexVec.GetElement(15);
+            var shuffleSpare = Avx2.Shuffle(hexVec, Vector256.Create((byte)14, 0xFF, 15, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 12, 0xFF, 13, 0xFF, 14, 0xFF, 15, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF));
+            var byte1415 = shuffleSpare.AsUInt32().GetElement(0);
+            MemoryMarshal.Write(spanBytes[32..], ref byte1415);
 
-            spanBytes[64] = hexVec.GetElement(28);
-            spanBytes[66] = hexVec.GetElement(29);
-            spanBytes[68] = hexVec.GetElement(30);
-            spanBytes[70] = hexVec.GetElement(31);
+            var byte2731 = shuffleSpare.AsUInt64().GetElement(2);
+            MemoryMarshal.Write(spanBytes[64..], ref byte2731);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
