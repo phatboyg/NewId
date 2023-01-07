@@ -9,7 +9,7 @@ namespace MassTransit.NewIdFormatters
     using System.Runtime.Intrinsics.X86;
 
 
-    public static class IntrinsicsHelper
+    internal static class IntrinsicsHelper
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Vector128ToCharUtf16(Vector128<byte> value, Span<byte> destination)
