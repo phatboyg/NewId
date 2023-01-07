@@ -1,9 +1,9 @@
 ﻿namespace MassTransit.NewIdFormatters
 {
-    using System;
-#if NET6_0_OR_GREATER
-    using System.Runtime.InteropServices;
     using System.Runtime.CompilerServices;
+#if NET6_0_OR_GREATER
+    using System;
+    using System.Runtime.InteropServices;
     using System.Runtime.Intrinsics;
     using System.Runtime.Intrinsics.X86;
 #endif
@@ -135,9 +135,10 @@
             var byte2731 = shuffleSpare.AsUInt64().GetElement(2);
             MemoryMarshal.Write(spanBytes[64..], ref byte2731);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+
+        // From https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/HexConverter.cs#L83
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
         {
             uint difference = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU) - 0x8989U;

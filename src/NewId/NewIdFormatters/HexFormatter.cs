@@ -51,6 +51,7 @@
             return new string(result, 0, 32);
         }
 
+        // From https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/HexConverter.cs#L83
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static unsafe void HexToChar(byte value, char* buffer, int startingIndex, uint casing)
         {

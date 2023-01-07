@@ -53,7 +53,7 @@ namespace MassTransit.NewIdFormatters
             return Avx2.Shuffle(isUpper ? upperCharSet : lowerCharSet, values);
         }
 
-
+        // From https://github.com/Nugine/simd/blob/main/crates/base32-simd/src/encode.rs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EncodeBase32(ReadOnlySpan<byte> span, Span<char> output, Vector256<byte> lowLut, Vector256<byte> upperLut)
         {
